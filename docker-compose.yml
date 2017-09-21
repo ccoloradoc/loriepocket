@@ -1,0 +1,22 @@
+version: "2"
+services:
+  portal:
+    build: ./services/portal
+    volumes:
+      - ./services/portal/target:/portal
+  cdn:
+    build: ./services/cdn
+    volumes:
+      - ./services/cdn/dist:/www/data
+      - ./services/cdn:/cdn
+      - ./data/log/cdn:/var/log/nginx/
+  gateway:
+    build: ./services/nginx
+    volumes:
+      - ./data/log/nginx:/var/log/nginx/
+      - ./services/nginx/services:/etc/nginx/conf.d/
+    links:
+      - cdn
+      - portal
+    ports:
+      - "8000:80"
