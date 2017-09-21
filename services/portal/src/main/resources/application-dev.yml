@@ -6,4 +6,4 @@ jwt:
   secret: queenvictoria
   cookie: AUTH-TOKEN
 server:
-  port: 90 #local environment IntelliJ
+  port: 80
