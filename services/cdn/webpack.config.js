@@ -11,6 +11,10 @@ module.exports = {
      path: path.join(__dirname, "dist/js"),
      filename: "[name].bundle.js"
   },
+  externals: {
+    "jquery": "jQuery",
+    "materialize": "materialize"
+  },
   module: {
     loaders: [{
       exclude: /node_modules/,
