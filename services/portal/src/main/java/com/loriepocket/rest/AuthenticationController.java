@@ -49,8 +49,9 @@ public class AuthenticationController {
     @Value("${jwt.cookie}")
     private String TOKEN_COOKIE;
 
-    @RequestMapping(value="/signup", method= RequestMethod.POST, produces={ MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<?> signUp(@RequestBody LoginRequest loginRequest) {
+    @RequestMapping(value="/signup", method= RequestMethod.POST, consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE},
+            produces={ MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> signUp(LoginRequest loginRequest) {
         if(userService.findByUsername(loginRequest.getUsername()) == null) {
             Authority authority = authorityService.findByName("ROLE_USER");
             User user = loginRequestToUserConverter.convert(loginRequest);
