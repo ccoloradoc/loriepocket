@@ -6,8 +6,8 @@ import { singin, clearAuthError } from '../actions';
 
 class Signin extends Component {
   componentWillMount() {
-    console.log('Props', this.props.location.query.success);
-    if(!this.props.location.query.success) {
+    const { query } = this.props.location;
+    if(!query.success && !query.msg) {
       this.props.clearAuthError();
     }
   }

@@ -48,9 +48,16 @@ export function signup(credentials) {
   }
 }
 
-export function singout() {
-  localStorage.removeItem('token');
-  return { type: UNAUTH_USER };
+export function signout(message) {
+  return function(dispatch) {
+    console.log('signout')
+    // Remove token from session
+    localStorage.removeItem('token');
+    // Forward to signin
+    browserHistory.push('/signin' + (message ? '?msg=true' : ''));
+    // Update auth state
+    dispatch({ type: UNAUTH_USER, payload: message });
+  }
 }
 
 export function clearAuthError() {

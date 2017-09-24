@@ -1,25 +1,25 @@
+import axios from 'axios';
+import qs from 'qs';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import promise from 'redux-promise';
-import reduxThunk from 'redux-thunk';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import Application from './components/app';
 import { SigninScreen, SignoutScreen, SignupScreen, RequireAuth } from 'authentication';
+import { configureSecuredAxios } from 'authentication/services';
+
+import { AdminScreen } from 'admin';
 import { Profile } from 'profile';
 
-import reducers from './reducers';
-
 import { AUTH_USER } from 'authentication/actions';
-
-const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
-const store = createStoreWithMiddleware(reducers);
+import store from './store';
 
 if(localStorage.getItem('token')) {
   store.dispatch({ type: AUTH_USER });
 }
+
+configureSecuredAxios(store);
 
 class Login extends Component {
   render() {
@@ -27,6 +27,7 @@ class Login extends Component {
       <Provider store={store}>
         <Router history={browserHistory}>
           <Route path="/" component={Application}>
+            <IndexRoute component={RequireAuth(AdminScreen)}/>
             <Route path="signin" component={SigninScreen} />
             <Route path="signout" component={SignoutScreen} />
             <Route path="signup" component={SignupScreen} />
@@ -37,5 +38,10 @@ class Login extends Component {
     );
   }
 }
+
+ // Ready
+$( document ).ready(function(){
+    $(".button-collapse").sideNav();
+});
 
 ReactDOM.render(<Login />, document.querySelector('.workspace'));

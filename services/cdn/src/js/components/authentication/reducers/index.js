@@ -5,7 +5,7 @@ export default function(state = {}, action) {
     case AUTH_USER:
       return { ...state, authenticated: true };
     case UNAUTH_USER:
-      return { ...state, authenticated: false };
+      return { ...state, authenticated: false, message: action.payload || null };
     case AUTH_ERROR:
       return { ...state, message: action.payload };
     case AUTH_ERROR_CLEANUP:
