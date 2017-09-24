@@ -8,8 +8,6 @@ services:
     build: ./services/cdn
     volumes:
       - ./services/cdn/dist:/www/data
-      - ./services/cdn/config:/etc/nginx
-      - ./services/cdn:/cdn
       - ./data/log/cdn:/var/log/nginx/
   gateway:
     build: ./services/nginx
