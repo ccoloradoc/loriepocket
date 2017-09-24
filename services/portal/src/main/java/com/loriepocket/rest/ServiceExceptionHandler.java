@@ -1,6 +1,8 @@
 package com.loriepocket.rest;
 
 import com.loriepocket.exception.UserAlreadyExistsException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -30,6 +32,12 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
         Map<String, Object> model = this.getDefaultErrorAttributes(ex, HttpStatus.CONFLICT);
         return new ResponseEntity<Object>(model, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    private ResponseEntity<Object> handleExpiredJwtException(JwtException ex) {
+        Map<String, Object> model = this.getDefaultErrorAttributes(ex, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<Object>(model, HttpStatus.UNAUTHORIZED);
     }
 
     private Map<String, Object> getDefaultErrorAttributes(Exception ex, HttpStatus status) {
