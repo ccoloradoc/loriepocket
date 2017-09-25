@@ -5,7 +5,7 @@ import { LoginForm } from 'authentication';
 class Application extends Component {
   render() {
     return (
-      <div className="all">
+      <div className="application">
         <Header/>
         { this.props.children }
       </div>
