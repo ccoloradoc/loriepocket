@@ -49,4 +49,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encondedPassword);
         return userRepository.save(user);
     }
+
+    @Override
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
 }
