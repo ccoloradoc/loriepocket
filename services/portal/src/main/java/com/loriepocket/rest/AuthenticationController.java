@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +44,10 @@ public class AuthenticationController {
     @Autowired
     private AuthorityService authorityService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
     @Value("${jwt.expires_in}")
     private int EXPIRES_IN;
 
@@ -53,9 +58,15 @@ public class AuthenticationController {
             produces={ MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> signUp(LoginRequest loginRequest) {
         if(userService.findByUsername(loginRequest.getUsername()) == null) {
-            Authority authority = authorityService.findByName("ROLE_USER");
+            // Convert POJO
             User user = loginRequestToUserConverter.convert(loginRequest);
+            // Assign default role
+            Authority authority = authorityService.findByName("ROLE_USER");
             user.addAuthority(authority);
+            // Encrypt password
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+
             user = userService.saveOrUpdate(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {

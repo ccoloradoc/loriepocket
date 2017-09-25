@@ -21,9 +21,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Override
     public User findByUsername( String username ) throws UsernameNotFoundException {
         User u = userRepository.findByUsername( username );
@@ -45,8 +42,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveOrUpdate(User user) {
-        String encondedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encondedPassword);
         return userRepository.save(user);
     }
 
