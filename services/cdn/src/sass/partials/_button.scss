@@ -2,3 +2,16 @@
   cursor: pointer;
   vertical-align: middle;
 }
+
+.input-field.input-group {
+  display: flex;
+  .input {
+      flex-grow: 1;
+      display: inline-block;
+      margin-bottom: 0px;
+  }
+  .btn {
+    flex-grow: 0;
+    padding: 0 1rem;
+  }
+}

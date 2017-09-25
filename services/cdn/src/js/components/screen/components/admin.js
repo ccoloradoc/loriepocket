@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { UserList, UserForm } from 'admin';
+import { UserList, UserForm, InviteList } from 'admin';
 
 
 class AdminScreen extends Component {
@@ -12,6 +12,14 @@ class AdminScreen extends Component {
           </div>
           <div className="col s4">
             <UserForm/>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col s8">
+            <InviteList/>
+          </div>
+          <div className="col s4">
+
           </div>
         </div>
       </div>

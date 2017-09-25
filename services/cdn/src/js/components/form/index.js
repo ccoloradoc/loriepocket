@@ -16,6 +16,21 @@ export function InputField(field) {
   );
 };
 
+export function SimpleInputField(field) {
+  const { meta: { active, touched, error, valid } } = field;
+  const className = `text-help ${touched && error ? 'red-text' : ''}`;
+
+  return (
+    <div className="input">
+      <input {...field.input} type={ field.type || 'text' } className="validate"/>
+      <div className={className}>
+        {touched ? error : ''}
+      </div>
+    </div>
+  );
+};
+
+
 export function HiddenField(field) {
   return (
     <input {...field.input} type={ field.type || 'text' } />

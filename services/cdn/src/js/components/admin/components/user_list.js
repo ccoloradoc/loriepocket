@@ -45,11 +45,18 @@ class UserList extends Component {
     });
   }
 
+  renderInvite() {
+    if(this.state.invite)
+      return <InviteForm/>;
+  }
+
   render() {
     return (
       <div className="card">
         <div className="card-content">
-          <span className="card-title">User List</span>
+          <div className="card-title">
+            <span>User List</span>
+          </div>
           <table className="striped">
            { this.renderHead() }
            <tbody>
