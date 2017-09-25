@@ -1,4 +1,4 @@
-import { FETCH_USERS, SELECT_USER, UPDATE_USER, UPDATE_USER_ROLE, FETCH_ROLES } from '../actions';
+import { FETCH_USERS, SELECT_USER, UPDATE_USER, UPDATE_USER_ROLE, DELETE_USER, FETCH_ROLES } from '../actions';
 
 function updateRole(roles, role) {
   if(roles.some(currentRole => currentRole.authority == role.name )) {
@@ -15,6 +15,9 @@ export function userListReducer(state = {}, action) {
       return _.mapKeys(action.payload, 'id');
     case UPDATE_USER:
       state[action.payload.id] = action.payload;
+      return { ...state };
+    case DELETE_USER:
+      delete state[action.payload.id];
       return { ...state };
     default:
       return state;
