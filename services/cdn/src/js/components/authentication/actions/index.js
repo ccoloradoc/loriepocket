@@ -1,11 +1,13 @@
 import { browserHistory } from 'react-router';
 import axios from 'axios';
+import securedConnection from 'authentication/services';
 import qs from 'qs';
 
 export const AUTH_USER = 'auth_user';
 export const UNAUTH_USER = 'unauth_user';
 export const AUTH_ERROR = 'auth_error';
 export const AUTH_ERROR_CLEANUP = 'auth_error_cleanup';
+export const MYSELF = 'myself';
 
 const AUTH_SIGNIN_URL = '/auth/login';
 const AUTH_SIGNUP_URL = '/auth/signup';
@@ -62,4 +64,17 @@ export function signout(message) {
 
 export function clearAuthError() {
   return { type: AUTH_ERROR_CLEANUP };
+}
+
+
+export function findMyself() {
+  return function(dispatch) {
+    securedConnection.get('/auth/me')
+      .then((response) => {
+        dispatch({
+          type: MYSELF,
+          payload: response.data
+        })
+      })
+  }
 }
