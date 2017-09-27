@@ -49,15 +49,15 @@ class MealForm extends Component {
 
     console.log('values', values);
     if(values.id) {
-      this.props.updateMeal(values, this.onComplete.bind(this));
+      this.props.updateMeal(values, this.props.activeProfile, this.onComplete.bind(this));
     } else {
-      this.props.saveMeal(values, this.onComplete.bind(this));
+      this.props.saveMeal(values, this.props.activeProfile, this.onComplete.bind(this));
     }
 
   }
 
   onComplete() {
-    this.props.selectMeal(undefined);
+    console.log('operationc completed');
   }
 
   render() {
@@ -71,7 +71,6 @@ class MealForm extends Component {
           <span className="card-title">Meal</span>
           <form className="row" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
             <Field name="id"  type="hidden" component={ HiddenField }/>
-            <Field name="userId"  type="hidden" component={ HiddenField }/>
             <Field label="Meal:" name="name" type="text" component={ InputField }/>
             <Field label="Calories:" name="calories" type="text" component={ InputField }/>
             <Field label="Date:" name="consumedDatePlaceholder" component={ DatePicker }/>
@@ -103,6 +102,6 @@ function validate(values) {
 }
 
 export default connect(
-  (state) => ({ initialValues: state.meal }) ,
+  (state) => ({ initialValues: state.meal, activeProfile: state.activeProfile }) ,
   { updateMeal, saveMeal, updateConsumedDate, updateConsumedDateTime, selectMeal })
   (reduxForm({ validate, form: 'MealForm', enableReinitialize: true })(MealForm));

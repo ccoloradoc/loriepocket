@@ -1,9 +1,9 @@
 import { FETCH_MEALS, UPDATE_MEAL, POST_MEAL, DELETE_MEAL, SELECT_MEAL, UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME } from '../actions';
 
-export function mealListReducer(state = {}, action) {
+export function mealListReducer(state = { empty: true }, action) {
   switch (action.type) {
     case FETCH_MEALS:
-      return _.mapKeys(action.payload, 'id');
+      return _.mapKeys(action.payload.content, 'id');
     case POST_MEAL:
       state[action.payload.id] = action.payload;
       return { ...state };

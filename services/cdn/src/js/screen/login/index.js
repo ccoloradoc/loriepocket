@@ -30,7 +30,9 @@ class Login extends Component {
             <Route path="signin" component={SigninScreen} />
             <Route path="signout" component={SignoutScreen} />
             <Route path="signup" component={SignupScreen} />
-            <Route path="profile" component={RequireAuth(ProfileScreen)} />
+            <Route path="profile" component={RequireAuth(ProfileScreen)}>
+              <Route path=":id" component={RequireAuth(ProfileScreen)}/>
+            </Route>
             <Route path="admin" component={RequireAuth(AdminScreen)} />
           </Route>
         </Router>

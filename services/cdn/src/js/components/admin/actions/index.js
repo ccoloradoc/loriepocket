@@ -2,6 +2,7 @@ import axios from 'authentication/services';
 import React, { Component } from 'react';
 
 export const FETCH_USERS = 'fetch_users';
+export const FETCH_USER = 'fetch_user';
 export const UPDATE_USER = 'update_user';
 export const UPDATE_USER_ROLE = 'update_user_role';
 export const DELETE_USER = 'delete_user';
@@ -13,10 +14,25 @@ export const DELETE_INVITE = 'delete_invite';
 
 export function fetchUsers() {
   return function(dispatch) {
-    axios.get('/api/user/all')
+    axios.get('/api/user')
       .then((response) => {
         dispatch({
           type: FETCH_USERS,
+          payload: response.data
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  }
+}
+
+export function fetchUser(userId) {
+  return function(dispatch) {
+    axios.get(`/api/user/${userId}`)
+      .then((response) => {
+        dispatch({
+          type: SELECT_USER,
           payload: response.data
         });
       })

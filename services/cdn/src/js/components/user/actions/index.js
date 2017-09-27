@@ -9,9 +9,10 @@ export const DELETE_MEAL = 'delete_meal';
 export const UPDATE_CONSUMED_DATE = 'update_consumed_date';
 export const UPDATE_CONSUMED_DATE_TIME = 'update_consumed_date_time';
 
-export function fetchMeals() {
+export function fetchMeals(user) {
+  const url = user.links.find((link) => link.rel === 'meal').href;
   return function(dispatch) {
-    axios.get('/api/meal')
+    axios.get(url)
       .then((response) => {
         dispatch({
           type: FETCH_MEALS,
@@ -33,9 +34,10 @@ export function selectMeal(meal) {
   }
 }
 
-export function saveMeal(meal, callback) {
+export function saveMeal(meal, user, callback) {
+  const url = user.links.find((link) => link.rel === 'meal').href;
   return function(dispatch) {
-    axios.post(`/api/meal`, meal)
+    axios.post(url, meal)
       .then((response) => {
         callback();
         dispatch({
@@ -46,9 +48,10 @@ export function saveMeal(meal, callback) {
   }
 }
 
-export function updateMeal(meal, callback) {
+export function updateMeal(meal, user, callback) {
+  const url = user.links.find((link) => link.rel === 'meal').href;
   return function(dispatch) {
-    axios.put(`/api/meal/${meal.id}`, meal)
+    axios.put(`${url}/${meal.id}`, meal)
       .then((response) => {
         callback();
         dispatch({
@@ -59,9 +62,10 @@ export function updateMeal(meal, callback) {
   }
 }
 
-export function deleteMeal(meal) {
+export function deleteMeal(meal, user) {
+  const url = user.links.find((link) => link.rel === 'meal').href;
   return function(dispatch) {
-    axios.delete(`/api/meal/${meal.id}`, meal)
+    axios.delete(`${url}/${meal.id}`)
       .then((response) => {
         dispatch({
           type: DELETE_MEAL,

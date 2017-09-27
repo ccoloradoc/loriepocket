@@ -67,10 +67,11 @@ export function clearAuthError() {
 }
 
 
-export function findMyself() {
+export function findMyself(callback) {
   return function(dispatch) {
     securedConnection.get('/auth/me')
       .then((response) => {
+        if(callback) callback(reponse.data);
         dispatch({
           type: MYSELF,
           payload: response.data

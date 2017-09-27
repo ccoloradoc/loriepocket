@@ -14,7 +14,7 @@ function updateRole(roles, role) {
 export function userListReducer(state = {}, action) {
   switch (action.type) {
     case FETCH_USERS:
-      return _.mapKeys(action.payload, 'id');
+      return _.mapKeys(action.payload.content, 'id');
     case UPDATE_USER:
       state[action.payload.id] = action.payload;
       return { ...state };
