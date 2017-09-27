@@ -20,7 +20,7 @@ public class Meal {
     private Integer calories;
     private Date consumedDate;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID", nullable=false)
     @JsonIgnore
     private User user;
