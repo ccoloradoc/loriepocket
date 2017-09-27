@@ -80,9 +80,9 @@ public class MealController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/meal/{mealId}")
     @PreAuthorize("#userId == principal.id or hasAnyRole('MANAGER','ADMIN')")
     public void deleteUser(@PathVariable Long userId, @PathVariable Long mealId) {
-        Meal meal = mealService.findById(mealId);
+        Meal meal = mealService.findByIdAndFetchUser(mealId);
         // Meal exist and belongs to the user stated in path
-        if(meal != null && meal.getId() == userId)
+        if(meal != null && meal.getUser().getId() == userId)
             this.mealService.delete(mealId);
     }
 }

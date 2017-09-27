@@ -11,6 +11,7 @@ import java.util.Date;
  */
 public interface MealService {
     public Meal findById(Long id);
+    public Meal findByIdAndFetchUser(Long id);
     public Page<Meal> findByConsumedDateBetween(Date start, Date end, Pageable pageable);
     public Page<Meal> findAllByUserId(Long id, Pageable pageable);
     public Page<Meal> findAll(Pageable pageable);

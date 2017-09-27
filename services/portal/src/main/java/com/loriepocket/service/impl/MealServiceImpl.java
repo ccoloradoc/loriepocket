@@ -35,6 +35,11 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
+    public Meal findByIdAndFetchUser(Long id) {
+        return mealRepository.findByIdAndFetchUser(id);
+    }
+
+    @Override
     public Page<Meal> findAllByUserId(Long id, Pageable pageable) {
         return mealRepository.findAllByUserId(id, pageable);
     }
