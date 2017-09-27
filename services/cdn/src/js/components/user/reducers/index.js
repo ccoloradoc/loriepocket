@@ -21,6 +21,8 @@ export function mealListReducer(state = { empty: true }, action) {
 export function mealReducer(state = null, action) {
   switch (action.type) {
     case SELECT_MEAL:
+      if(action.payload == null)
+        return null;
       return {...action.payload };
       break;
     default:

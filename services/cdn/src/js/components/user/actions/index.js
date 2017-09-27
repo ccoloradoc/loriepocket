@@ -50,6 +50,8 @@ export function saveMeal(meal, user, callback) {
 
 export function updateMeal(meal, user, callback) {
   const url = user.links.find((link) => link.rel === 'meal').href;
+  delete meal['links']; //clean
+  meal.consumedDate = new Date(meal.consumedDate);
   return function(dispatch) {
     axios.put(`${url}/${meal.id}`, meal)
       .then((response) => {

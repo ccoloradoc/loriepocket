@@ -16,3 +16,30 @@ ul.pipe {
     }
   }
 }
+
+
+.overlay-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(13, 206, 181,.7);
+  padding: 5rem;
+  height: 100%;
+  z-index: 40;
+  > div {
+    transform: translateY(-50%);
+    top: 50%;
+    position: relative;
+    width: auto;
+    max-height: 100%;
+  }
+}
+
+.ui-timepicker-container.ui-timepicker-standard{
+  z-index: 100!important;
+}
+
+.mrs {
+  margin-right: 1rem;
+}

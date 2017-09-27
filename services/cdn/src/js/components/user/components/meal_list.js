@@ -3,14 +3,10 @@ import _ from 'lodash';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { MealForm } from 'user';
 import { fetchMeals, deleteMeal, selectMeal } from '../actions';
-// import { findMyself } from 'authentication/actions';
 
 class MealList extends Component {
-  // componentWillMount() {
-  //   this.props.fetchMeals(this.props.user);
-  // }
-
   componentWillReceiveProps(nextProps) {
     if(nextProps.user && nextProps.meals.empty) {
       this.props.fetchMeals(nextProps.user);
@@ -58,7 +54,7 @@ class MealList extends Component {
         <div className="card-content">
           <div className="card-title">
             <span>Calories List</span>
-            <a className="btn-floating btn right red" onClick={ () => { this.props.selectMeal({ userId: this.props.user.id }) } }>
+            <a className="btn-floating btn right red" onClick={ () => { this.props.selectMeal({}) } }>
               <i className="material-icons">add</i>
             </a>
           </div>
@@ -69,11 +65,29 @@ class MealList extends Component {
            </tbody>
          </table>
         </div>
+        { this.renderForm() }
       </div>
     );
+  }
+
+  renderForm() {
+    if(this.props.meal !== null) {
+      return (
+        <div className="overlay-modal">
+          <div>
+            <MealForm onComplete={ this.closeModal.bind(this) }/>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  closeModal() {
+    console.log('closemodal')
+    this.props.selectMeal(null);
   }
 }
 
 export default connect(
-  (state) => { return { meals: state.meals, activeProfile: state.activeProfile }  }, // , me: state.me
+  (state) => { return { meals: state.meals, meal: state.meal, activeProfile: state.activeProfile }  }, // , me: state.me
   { fetchMeals, deleteMeal, selectMeal } )(MealList); // , findMyself

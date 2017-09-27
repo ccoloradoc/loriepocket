@@ -5,8 +5,16 @@ import { InputField, HiddenField, CheckboxField, DatePicker, TimePicker } from '
 import { updateMeal, saveMeal, updateConsumedDate, updateConsumedDateTime, selectMeal } from '../actions';
 
 class MealForm extends Component {
-  componentDidUpdate() {
-    $('.datepicker').pickadate({
+  componentWillReceiveProps(props) {
+    if(props.initialValues) {
+      this.initDatepicker(props.initialValues);
+    }
+  }
+
+  initDatepicker(meal) {
+    let now = meal.consumedDate ? new Date(meal.consumedDate) : new Date();
+
+    var $input = $('.datepicker').pickadate({
       selectMonths: true, // Creates a dropdown to control month
       selectYears: 15, // Creates a dropdown of 15 years to control year,
       today: 'Today',
@@ -16,7 +24,9 @@ class MealForm extends Component {
       onSet: this.onUpdateDate.bind(this)
     });
 
-    let now = new Date();
+    // Use the picker object directly.
+    var picker = $input.pickadate('picker');
+    picker.set('select', now);
 
     $('.timepicker').timepicker({
         timeFormat: 'h:mm p',
@@ -49,22 +59,15 @@ class MealForm extends Component {
 
     console.log('values', values);
     if(values.id) {
-      this.props.updateMeal(values, this.props.activeProfile, this.onComplete.bind(this));
+      this.props.updateMeal(values, this.props.activeProfile, this.props.onComplete);
     } else {
-      this.props.saveMeal(values, this.props.activeProfile, this.onComplete.bind(this));
+      this.props.saveMeal(values, this.props.activeProfile, this.props.onComplete);
     }
 
   }
 
-  onComplete() {
-    console.log('operationc completed');
-  }
-
   render() {
     const { handleSubmit } = this.props;
-    if(!this.props.initialValues)
-     return (<span></span>);
-
     return (
       <div className="card">
         <div className="card-content">
@@ -76,6 +79,7 @@ class MealForm extends Component {
             <Field label="Date:" name="consumedDatePlaceholder" component={ DatePicker }/>
             <Field label="Hour:" name="consumedDateHour" component={ TimePicker }/>
             <div className="input-field col s12 right-align">
+              <button type="button" onClick={ () => { this.props.onComplete() } } className="waves-effect waves-light btn #e0e0e0 grey lighten-1 mrs">Cancel</button>
               <button type="submit" className="waves-effect waves-light btn right-align">Save</button>
             </div>
           </form>
