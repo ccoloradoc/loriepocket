@@ -4,11 +4,11 @@ import com.loriepocket.model.Meal;
 import com.loriepocket.repository.MealRepository;
 import com.loriepocket.service.MealService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by cristian.colorado on 9/25/2017.
@@ -25,15 +25,18 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public List<Meal> findByConsumedDateBetween(Date start, Date end) {
-        return mealRepository.findByConsumedDateBetween(start, end);
+    public Page<Meal> findByConsumedDateBetween(Date start, Date end, Pageable pageable ) {
+        return mealRepository.findByConsumedDateBetween(start, end, pageable);
     }
 
     @Override
-    public List<Meal> findAll() {
-        List<Meal> mealList = new ArrayList<>();
-        mealRepository.findAll().forEach(mealList::add);
-        return mealList;
+    public Page<Meal> findAll(Pageable pageable) {
+        return mealRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Meal> findAllByUserId(Long id, Pageable pageable) {
+        return mealRepository.findAllByUserId(id, pageable);
     }
 
     @Override

@@ -4,12 +4,12 @@ import com.loriepocket.model.User;
 import com.loriepocket.repository.UserRepository;
 import com.loriepocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,12 +32,8 @@ public class UserServiceImpl implements UserService {
         return u;
     }
 
-    public List<User> findAll() throws AccessDeniedException {
-        List<User> result = new ArrayList<>();
-
-        userRepository.findAll().forEach(result::add);
-
-        return result;
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override

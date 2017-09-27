@@ -2,10 +2,20 @@ package com.loriepocket.rest;
 
 import com.loriepocket.model.Authority;
 import com.loriepocket.model.User;
+import com.loriepocket.rest.assembler.MealResourceAssembler;
+import com.loriepocket.rest.assembler.UserResourceAssembler;
 import com.loriepocket.service.AuthorityService;
 import com.loriepocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.List;
 
+import static org.springframework.hateoas.core.DummyInvocationUtils.methodOn;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -61,12 +73,20 @@ public class UserController {
             this.userService.delete(user);
     }
 
-    @RequestMapping( method = GET, value= "/user/all")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<User> loadAll() {
-        return this.userService.findAll();
-    }
+//    @RequestMapping( method = GET, value= "/user/all")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public List<User> loadAll() {
+//        return this.userService.findAll();
+//    }
 
+
+    @RequestMapping( method = GET, value= "/user")
+    @PreAuthorize("hasRole('ADMIN')")
+    HttpEntity<PagedResources<User>> loadAllPageable(Pageable pageable, PagedResourcesAssembler assembler) throws Exception{
+        Page<User> users  = this.userService.findAll(pageable);
+        Link link = linkTo(methodOn(UserController.class).loadAllPageable(pageable, assembler)).withRel("user");
+        return new ResponseEntity<>(assembler.toResource(users, new UserResourceAssembler(), link), HttpStatus.OK);
+    }
 
     /*
      *  We are not using userService.findByUsername here(we could),

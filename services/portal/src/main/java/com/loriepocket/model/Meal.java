@@ -1,5 +1,7 @@
 package com.loriepocket.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -17,6 +19,17 @@ public class Meal {
     private String name;
     private Integer calories;
     private Date consumedDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="USER_ID", nullable=false)
+    @JsonIgnore
+    private User user;
+
+    public User getUser() { return user; }
+
+    public void setUser(User user) {
+        this.user = user;
+    };
 
     public Long getId() {
         return id;
