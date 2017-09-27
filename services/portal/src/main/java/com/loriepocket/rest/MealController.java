@@ -66,7 +66,7 @@ public class MealController {
             throw new IllegalArgumentException("Could not find a user with id :" + userId);
 
         // Find user
-        Meal meal = this.mealService.findById(userId);
+        Meal meal = this.mealService.findById(mealId);
         // Copy over the values to be updated
         meal.setId(mealId);
         meal.setName(payload.getName());
