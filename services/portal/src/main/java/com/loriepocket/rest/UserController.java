@@ -3,6 +3,7 @@ package com.loriepocket.rest;
 import com.loriepocket.model.Authority;
 import com.loriepocket.model.User;
 import com.loriepocket.rest.assembler.MealResourceAssembler;
+import com.loriepocket.rest.assembler.UserResource;
 import com.loriepocket.rest.assembler.UserResourceAssembler;
 import com.loriepocket.service.AuthorityService;
 import com.loriepocket.service.UserService;
@@ -45,10 +46,22 @@ public class UserController {
     @Autowired
     private AuthorityService authorityService;
 
+    @Autowired
+    private UserResourceAssembler userResourceAssembler;
+
+    @RequestMapping( method = GET, value= "/user")
+    @PreAuthorize("hasRole('ADMIN')")
+    HttpEntity<PagedResources<User>> loadAllPageable(Pageable pageable, PagedResourcesAssembler assembler) throws Exception{
+        Page<User> users  = this.userService.findAll(pageable);
+        Link link = linkTo(methodOn(UserController.class).loadAllPageable(pageable, assembler)).withRel("user");
+        return new ResponseEntity<>(assembler.toResource(users, new UserResourceAssembler(), link), HttpStatus.OK);
+    }
+
+
     @RequestMapping( method = GET, value = "/user/{userId}" )
     @PreAuthorize("hasRole('ADMIN')")
-    public User loadById( @PathVariable Long userId ) {
-        return this.userService.findById( userId );
+    public UserResource loadById(@PathVariable Long userId ) {
+        return userResourceAssembler.toResource(this.userService.findById(userId));
     }
 
     @RequestMapping(method = PUT, value = "/user/{userId}")
@@ -71,21 +84,6 @@ public class UserController {
         User user = this.userService.findById(userId);
         if(user != null)
             this.userService.delete(user);
-    }
-
-//    @RequestMapping( method = GET, value= "/user/all")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public List<User> loadAll() {
-//        return this.userService.findAll();
-//    }
-
-
-    @RequestMapping( method = GET, value= "/user")
-    @PreAuthorize("hasRole('ADMIN')")
-    HttpEntity<PagedResources<User>> loadAllPageable(Pageable pageable, PagedResourcesAssembler assembler) throws Exception{
-        Page<User> users  = this.userService.findAll(pageable);
-        Link link = linkTo(methodOn(UserController.class).loadAllPageable(pageable, assembler)).withRel("user");
-        return new ResponseEntity<>(assembler.toResource(users, new UserResourceAssembler(), link), HttpStatus.OK);
     }
 
     /*

@@ -6,6 +6,8 @@ import com.loriepocket.exception.UserAlreadyExistsException;
 import com.loriepocket.model.Authority;
 import com.loriepocket.model.User;
 import com.loriepocket.dto.UserTokenState;
+import com.loriepocket.rest.assembler.UserResource;
+import com.loriepocket.rest.assembler.UserResourceAssembler;
 import com.loriepocket.security.TokenHelper;
 import com.loriepocket.service.AuthorityService;
 import com.loriepocket.service.UserService;
@@ -49,6 +51,8 @@ public class AuthenticationController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserResourceAssembler userResourceAssembler;
 
     @Value("${jwt.expires_in}")
     private int EXPIRES_IN;
@@ -101,7 +105,7 @@ public class AuthenticationController {
 
     @RequestMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public User user(Principal user) {
-        return this.userService.findByUsername(user.getName());
+    public UserResource user(Principal user) {
+        return userResourceAssembler.toResource(this.userService.findByUsername(user.getName()));
     }
 }

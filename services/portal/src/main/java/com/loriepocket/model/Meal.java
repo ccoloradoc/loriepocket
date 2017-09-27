@@ -25,6 +25,18 @@ public class Meal {
     @JsonIgnore
     private User user;
 
+//    @Transient
+//    @JsonIgnore
+//    private Long userId;
+//
+//    public Long getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(Long userId) {
+//        this.userId = userId;
+//    }
+
     public User getUser() { return user; }
 
     public void setUser(User user) {
