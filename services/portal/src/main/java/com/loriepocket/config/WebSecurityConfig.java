@@ -72,12 +72,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         HttpMethod.GET,
+                        "/h2-console/**",
                         "/",
                         "/webjars/**",
                         "/static/**",
                         "/**/favicon.ico"
                 ).permitAll()
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/auth/**", "/h2-console/**").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService), BasicAuthenticationFilter.class)
                 .formLogin()
@@ -92,6 +93,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // disable csrf for the login request
         http
                 .csrf().disable();
+
+        http.headers().frameOptions().disable();
 //                .ignoringAntMatchers("/auth/login", "/auth/signup")
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
@@ -103,6 +106,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(
                 HttpMethod.GET,
                 "/",
+                "/h2-console/**",
                 "/*.html",
                 "/favicon.ico",
                 "/**/*.html",
