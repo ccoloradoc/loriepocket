@@ -1,7 +1,11 @@
-import { FETCH_MEALS, UPDATE_MEAL, POST_MEAL, DELETE_MEAL, SELECT_MEAL, UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME } from '../actions';
+import { FETCH_MEALS, UPDATE_MEAL, POST_MEAL, DELETE_MEAL, SELECT_MEAL,
+  UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME } from '../actions';
+import { UNAUTH_USER } from 'authentication/actions';
 
 export function mealListReducer(state = null, action) {
   switch (action.type) {
+    case UNAUTH_USER:
+      return null;
     case FETCH_MEALS:
       return _.mapKeys(action.payload.content, 'id');
     case POST_MEAL:
