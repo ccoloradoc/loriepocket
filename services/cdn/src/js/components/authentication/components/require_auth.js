@@ -9,13 +9,13 @@ export default function(ComposedComponent, roles) {
 
     componentWillMount() {
       if (!this.isUserAllowed()) {
-        this.context.router.push('/');
+        this.context.router.push('/profile');
       }
     }
 
     componentWillUpdate(nextProps) {
       if (!this.isUserAllowed()) {
-        this.context.router.push('/');
+        this.context.router.push('/profile');
       }
     }
 
@@ -33,9 +33,12 @@ export default function(ComposedComponent, roles) {
       if(pathname.indexOf('/profile/') !== -1) {
         // Review roles admin or manager
         return roles.indexOf('ROLE_ADMIN') != -1 || roles.indexOf('ROLE_MANAGER') != -1;
+      } else if (pathname.indexOf('/manager') !== -1) {
+        // Review roles of admin
+        return roles.indexOf('ROLE_MANAGER') != -1;
       } else if (pathname.indexOf('/admin') !== -1) {
         // Review roles of admin
-        return roles.indexOf('ROLE_ADMIN') != -1;
+        return roles.indexOf('ROLE_ADMIN') != -1 ;
       }
 
       return true;

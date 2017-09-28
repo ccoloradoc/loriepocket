@@ -9,7 +9,7 @@ import Application from './components/app';
 import { SigninScreen, SignoutScreen, SignupScreen, RequireAuth } from 'authentication';
 import { configureSecuredAxios } from 'authentication/services';
 
-import { AdminScreen, ProfileScreen } from 'screen';
+import { AdminScreen, ManagerScreen, ProfileScreen } from 'screen';
 
 import { AUTH_USER, MYSELF } from 'authentication/actions';
 import store from './store';
@@ -39,6 +39,7 @@ class Login extends Component {
               <Route path=":id" component={RequireAuth(ProfileScreen)}/>
             </Route>
             <Route path="admin" component={RequireAuth(AdminScreen)} />
+            <Route path="manager" component={RequireAuth(ManagerScreen)} />
           </Route>
         </Router>
       </Provider>

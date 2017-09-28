@@ -5,11 +5,16 @@ import { Link } from 'react-router';
 class Header extends Component {
   renderMenu() {
     if(this.props.auth.authenticated) {
-      return [
-        <li key={1}><Link to="/profile" activeClassName="active"><i className="material-icons small">account_circle</i></Link></li>,,
-        <li key={2}><Link to="/admin" activeClassName="active"><i className="material-icons small">supervisor_account</i></Link></li>,
-        <li key={3}><Link to="/signout" activeClassName="active"><i className="material-icons small">power_settings_new</i></Link></li>
-      ];
+      const menuItems = [];
+      const roles = localStorage.getItem('authorities');
+      menuItems.push(<li key={1}><Link to="/profile" activeClassName="active"><i className="material-icons small">account_circle</i></Link></li>);
+      if(roles.indexOf('ROLE_ADMIN') != -1) {
+        menuItems.push(<li key={2}><Link to="/admin" activeClassName="active"><i className="material-icons small">supervisor_account</i></Link></li>);
+      } else if(roles.indexOf('ROLE_MANAGER') != -1) {
+        menuItems.push(<li key={2}><Link to="/manager" activeClassName="active"><i className="material-icons small">supervisor_account</i></Link></li>);
+      }
+      menuItems.push(<li key={3}><Link to="/signout" activeClassName="active"><i className="material-icons small">power_settings_new</i></Link></li>);
+      return menuItems;
     } else {
       return [
         <li key={1}><Link to="/signin"><i className="material-icons small">input</i></Link></li>,
@@ -20,11 +25,16 @@ class Header extends Component {
 
   renderMenuMobile() {
     if(this.props.auth.authenticated) {
-      return [
-        <li key={1} className="bold"><Link to="/profile"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">account_circle</i>Me</Link></li>,
-        <li key={2} className="bold"><Link href="/admin"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">supervisor_account</i>Admin</Link></li>,
-        <li key={3} className="bold"><Link href="/signout"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">power_settings_new</i>Exit</Link></li>
-      ];
+      const menuItems = [];
+      const roles = localStorage.getItem('authorities');
+      menuItems.push(<li key={1} className="bold"><Link to="/profile"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">account_circle</i>Me</Link></li>);
+      if(roles.indexOf('ROLE_ADMIN') != -1) {
+        menuItems.push(<li key={2} className="bold"><Link href="/admin"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">supervisor_account</i>Admin</Link></li>);
+      } else if(roles.indexOf('ROLE_MANAGER') != -1) {
+        menuItems.push(<li key={2} className="bold"><Link href="/manager"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">supervisor_account</i>Manager</Link></li>);
+      }
+      menuItems.push(<li key={3} className="bold"><Link href="/signout"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">power_settings_new</i>Exit</Link></li>);
+      return menuItems;
     } else {
       return [
         <li key={1} className="bold"><Link href="/signin" className="waves-effect waves-teal"><i className="material-icons small">input</i>Sign In</Link></li>,
@@ -43,10 +53,6 @@ class Header extends Component {
             <a href="#" data-activates="mobile-demo" className="button-collapse">
                 <i className="material-icons">menu</i>
             </a>
-
-            <ul className="left hide-on-small-only">
-              <li><Link><i className="material-icons">backspace</i></Link></li>
-            </ul>
 
             <ul className="right hide-on-small-only">
               { this.renderMenu() }
