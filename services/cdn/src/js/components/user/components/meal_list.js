@@ -4,12 +4,13 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { MealForm } from 'user';
+import { Pagination } from 'commons';
 import { fetchMeals, deleteMeal, selectMeal } from '../actions';
 
 class MealList extends Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.user && nextProps.meals == null) {
-      this.props.fetchMeals(nextProps.user);
+      this.props.fetchMeals(nextProps.user, { size: 10 });
     }
   }
 
@@ -64,6 +65,7 @@ class MealList extends Component {
              { this.renderUsers() }
            </tbody>
          </table>
+         <Pagination move={this.move.bind(this)}/>
         </div>
         { this.renderForm() }
       </div>
@@ -82,11 +84,15 @@ class MealList extends Component {
     }
   }
 
+  move(page) {
+    this.props.fetchMeals(this.props.user, { page, size: this.props.page.size });
+  }
+
   closeModal() {
     this.props.selectMeal(null);
   }
 }
 
 export default connect(
-  (state) => { return { meals: state.meals, meal: state.meal, activeProfile: state.activeProfile }  }, // , me: state.me
+  (state) => { return { meals: state.meals, meal: state.meal, activeProfile: state.activeProfile, page: state.page }  }, // , me: state.me
   { fetchMeals, deleteMeal, selectMeal } )(MealList);

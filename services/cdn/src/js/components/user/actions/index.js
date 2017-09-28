@@ -1,5 +1,6 @@
 import axios from 'authentication/services';
 import React, { Component } from 'react';
+import qs from 'qs';
 
 export const FETCH_MEALS = 'fetch_meals';
 export const SELECT_MEAL = 'select_meal';
@@ -9,10 +10,10 @@ export const DELETE_MEAL = 'delete_meal';
 export const UPDATE_CONSUMED_DATE = 'update_consumed_date';
 export const UPDATE_CONSUMED_DATE_TIME = 'update_consumed_date_time';
 
-export function fetchMeals(user) {
+export function fetchMeals(user, filter) {
   const url = user.links.find((link) => link.rel === 'meal').href;
   return function(dispatch) {
-    axios.get(url)
+    axios.get(url + '?' + qs.stringify(filter))
       .then((response) => {
         dispatch({
           type: FETCH_MEALS,

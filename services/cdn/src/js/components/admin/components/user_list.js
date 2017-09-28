@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { fetchUsers, selectUser, deleteUser } from '../actions';
 import { UserForm } from 'admin';
+import { Pagination } from 'commons';
 
 class UserList extends Component {
   componentWillMount() {
@@ -64,6 +65,7 @@ class UserList extends Component {
              { this.renderUsers() }
            </tbody>
          </table>
+         <Pagination move={this.move.bind(this)}/>
         </div>
         { this.renderForm() }
       </div>
@@ -80,6 +82,11 @@ class UserList extends Component {
         </div>
       );
     }
+  }
+
+  move(url) {
+    console.log('move', url);
+    // this.props.fetchMeals(url)
   }
 
   closeModal() {
