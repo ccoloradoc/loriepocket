@@ -1,5 +1,5 @@
 import { FETCH_MEALS, UPDATE_MEAL, POST_MEAL, DELETE_MEAL, SELECT_MEAL,
-  UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME } from '../actions';
+  UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME, FILTER_DATE } from '../actions';
 import { UNAUTH_USER } from 'authentication/actions';
 import { ACTIVE_PROFILE } from 'screen/actions';
 
@@ -56,6 +56,26 @@ export function mealFormReducer(state, action) {
              consumedDateTime: action.payload
            }
          };
+    default:
+      return state;
+  }
+}
+
+export function filterFormReducer(state, action) {
+  switch(action.type) {
+    // Allow to update hidden field
+    case FILTER_DATE:
+    const oldStartDate = state.values ? state.values.startDate : '';
+    const oldEndDate = state.values ? state.values.endDate: '';
+    return {
+        ...state,
+        values: {
+          ...state.values,
+          startDate: action.payload.startDate || oldStartDate ,
+          endDate: action.payload.endDate || oldEndDate
+        }
+      };
+    break;
     default:
       return state;
   }

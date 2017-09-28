@@ -3,7 +3,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { MealForm } from 'user';
+import { MealForm, SearchBar } from 'user';
 import { Pagination } from 'commons';
 import { fetchMeals, deleteMeal, selectMeal } from '../actions';
 
@@ -34,12 +34,13 @@ class MealList extends Component {
       return;
 
     return _.map(this.props.meals, meal => {
+      const date = new Date(meal.consumedDate);
       return (
         <tr key={meal.id} >
           <td> {meal.id}</td>
           <td>{meal.name}</td>
           <td>{meal.calories}</td>
-          <td>{ moment(new Date(meal.consumedDate)).format('ddd, MMMM Do YYYY, h:mm a') }</td>
+          <td>{ date.toLocaleString() }</td>
           <td>
             <a className="btn-transparent" onClick={ () => { _self.props.selectMeal(meal) } }><i className="material-icons">edit</i></a> &nbsp;
             <a className="btn-transparent red-text" onClick={ () => { _self.props.deleteMeal(meal, _self.props.activeProfile) } }><i className="material-icons">delete</i></a>
@@ -59,6 +60,7 @@ class MealList extends Component {
               <i className="material-icons">add</i>
             </a>
           </div>
+          <SearchBar/>
           <table className="striped">
            { this.renderHead() }
            <tbody>
@@ -85,7 +87,15 @@ class MealList extends Component {
   }
 
   move(page) {
-    this.props.fetchMeals(this.props.user, { page, size: this.props.page.size });
+    let filter = {};
+
+    if(this.props.filter.startDate)
+      filter.startDate = new Date(this.props.filter.startDate);
+
+      if(this.props.filter.endDate)
+        filter.endDate = new Date(this.props.filter.endDate);
+
+    this.props.fetchMeals(this.props.user, { ...filter, page, size: this.props.page.size });
   }
 
   closeModal() {
@@ -94,5 +104,8 @@ class MealList extends Component {
 }
 
 export default connect(
-  (state) => { return { meals: state.meals, meal: state.meal, activeProfile: state.activeProfile, page: state.page }  }, // , me: state.me
+  (state) => { return { meals: state.meals, meal: state.meal,
+                        activeProfile: state.activeProfile,
+                        page: state.page,
+                        filter: state.form.SearchBar ? state.form.SearchBar.values || {} : {} }  }, // , me: state.me
   { fetchMeals, deleteMeal, selectMeal } )(MealList);

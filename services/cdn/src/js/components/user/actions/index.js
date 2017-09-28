@@ -9,6 +9,7 @@ export const UPDATE_MEAL = 'update_meal';
 export const DELETE_MEAL = 'delete_meal';
 export const UPDATE_CONSUMED_DATE = 'update_consumed_date';
 export const UPDATE_CONSUMED_DATE_TIME = 'update_consumed_date_time';
+export const FILTER_DATE = 'filter_date';
 
 export function fetchMeals(user, filter) {
   const url = user.links.find((link) => link.rel === 'meal').href;
@@ -93,5 +94,14 @@ export function updateConsumedDateTime(date) {
       type: UPDATE_CONSUMED_DATE_TIME,
       payload: date
     })
+  }
+}
+
+export function updateDate(date) {
+  return function(dispatch) {
+    dispatch({
+      type: FILTER_DATE,
+      payload: date
+    });
   }
 }
