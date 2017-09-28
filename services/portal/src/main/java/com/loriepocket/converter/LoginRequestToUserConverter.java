@@ -15,6 +15,8 @@ public class LoginRequestToUserConverter implements Converter<LoginRequest, User
         User user = new User();
         user.setUsername(loginRequest.getUsername());
         user.setPassword(loginRequest.getPassword());
+        user.setFirstname(loginRequest.getFirstname());
+        user.setLastname(loginRequest.getLastname());
         return user;
     }
 }

@@ -50,7 +50,7 @@ public class UserController {
     private UserResourceAssembler userResourceAssembler;
 
     @RequestMapping( method = GET, value= "/user")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     HttpEntity<PagedResources<User>> loadAllPageable(Pageable pageable, PagedResourcesAssembler assembler) throws Exception{
         Page<User> users  = this.userService.findAll(pageable);
         Link link = linkTo(methodOn(UserController.class).loadAllPageable(pageable, assembler)).withRel("user");
@@ -59,7 +59,7 @@ public class UserController {
 
 
     @RequestMapping( method = GET, value = "/user/{userId}" )
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public UserResource loadById(@PathVariable Long userId ) {
         return userResourceAssembler.toResource(this.userService.findById(userId));
     }

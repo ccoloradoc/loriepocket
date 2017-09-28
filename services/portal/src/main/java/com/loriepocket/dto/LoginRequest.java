@@ -17,9 +17,12 @@ public class LoginRequest {
     }
 
     @JsonCreator
-    public LoginRequest(@JsonProperty("username") String username, @JsonProperty("password") String password) {
+    public LoginRequest(@JsonProperty("username") String username, @JsonProperty("password") String password,
+                        @JsonProperty("firstname") String firstname, @JsonProperty("lastname") String lastname) {
         this.username = username;
         this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
     }
 
     public String getUsername() {
