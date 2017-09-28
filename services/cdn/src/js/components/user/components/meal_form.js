@@ -57,7 +57,6 @@ class MealForm extends Component {
     delete values['consumedDateDate'];
     delete values['consumedDateTime'];
 
-    console.log('values', values);
     if(values.id) {
       this.props.updateMeal(values, this.props.activeProfile, this.props.onComplete);
     } else {

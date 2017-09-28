@@ -61,7 +61,6 @@ export function signup(credentials) {
 
 export function signout(message) {
   return function(dispatch) {
-    console.log('signout')
     // Remove token from session
     localStorage.removeItem('token');
     localStorage.removeItem('user');

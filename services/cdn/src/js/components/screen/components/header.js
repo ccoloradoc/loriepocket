@@ -6,14 +6,14 @@ class Header extends Component {
   renderMenu() {
     if(this.props.auth.authenticated) {
       return [
-        <li key={1}><Link to="/profile"><i className="material-icons small">account_circle</i></Link></li>,
-        <li key={2}><Link to="/"><i className="material-icons small">settings</i></Link></li>,
-        <li key={3}><Link to="/signout"><i className="material-icons small">input</i></Link></li>
+        <li key={1}><Link to="/profile" activeClassName="active"><i className="material-icons small">account_circle</i></Link></li>,,
+        <li key={2}><Link to="/admin" activeClassName="active"><i className="material-icons small">supervisor_account</i></Link></li>,
+        <li key={3}><Link to="/signout" activeClassName="active"><i className="material-icons small">power_settings_new</i></Link></li>
       ];
     } else {
       return [
         <li key={1}><Link to="/signin"><i className="material-icons small">input</i></Link></li>,
-        <li key={2}><Link to="/signup"><i className="material-icons small">input</i></Link></li>
+        <li key={2}><Link to="/signup"><i className="material-icons small">mode_edit</i></Link></li>
       ];
     }
   }
@@ -21,13 +21,14 @@ class Header extends Component {
   renderMenuMobile() {
     if(this.props.auth.authenticated) {
       return [
-        <li key={1} className="bold"><Link to="/profile" className="waves-effect waves-teal"><i className="material-icons small">account_circle</i>Me</Link></li>,
-        <li key={2} className="bold"><Link href="/" className="waves-effect waves-teal"><i className="material-icons small">settings</i>Admin</Link></li>
+        <li key={1} className="bold"><Link to="/profile"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">account_circle</i>Me</Link></li>,
+        <li key={2} className="bold"><Link href="/admin"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">supervisor_account</i>Admin</Link></li>,
+        <li key={3} className="bold"><Link href="/signout"  activeClassName="active" className="waves-effect waves-teal"><i className="material-icons small">power_settings_new</i>Exit</Link></li>
       ];
     } else {
       return [
         <li key={1} className="bold"><Link href="/signin" className="waves-effect waves-teal"><i className="material-icons small">input</i>Sign In</Link></li>,
-        <li key={2} className="bold"><Link href="/signup" className="waves-effect waves-teal"><i className="material-icons small">input</i>Sign Out</Link></li>
+        <li key={2} className="bold"><Link href="/signup" className="waves-effect waves-teal"><i className="material-icons small">mode_edit</i>Sign Out</Link></li>
       ];
     }
   }
@@ -42,7 +43,12 @@ class Header extends Component {
             <a href="#" data-activates="mobile-demo" className="button-collapse">
                 <i className="material-icons">menu</i>
             </a>
-            <ul className="right hide-on-med-and-down">
+
+            <ul className="left hide-on-small-only">
+              <li><Link><i className="material-icons">backspace</i></Link></li>
+            </ul>
+
+            <ul className="right hide-on-small-only">
               { this.renderMenu() }
             </ul>
             <ul className="side-nav" id="mobile-demo">

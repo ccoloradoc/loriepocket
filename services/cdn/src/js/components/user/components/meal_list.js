@@ -8,7 +8,7 @@ import { fetchMeals, deleteMeal, selectMeal } from '../actions';
 
 class MealList extends Component {
   componentWillReceiveProps(nextProps) {
-    if(nextProps.user && nextProps.meals.empty) {
+    if(nextProps.user && nextProps.meals == null) {
       this.props.fetchMeals(nextProps.user);
     }
   }
@@ -29,7 +29,7 @@ class MealList extends Component {
 
   renderUsers() {
     let _self = this;
-    if(this.props.meals.empty)
+    if(this.props.meals == null)
       return;
 
     return _.map(this.props.meals, meal => {
@@ -83,7 +83,6 @@ class MealList extends Component {
   }
 
   closeModal() {
-    console.log('closemodal')
     this.props.selectMeal(null);
   }
 }

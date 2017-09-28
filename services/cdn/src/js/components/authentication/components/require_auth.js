@@ -32,11 +32,9 @@ export default function(ComposedComponent, roles) {
 
       if(pathname.indexOf('/profile/') !== -1) {
         // Review roles admin or manager
-        console.log('profile', roles);
         return roles.indexOf('ROLE_ADMIN') != -1 || roles.indexOf('ROLE_MANAGER') != -1;
       } else if (pathname.indexOf('/admin') !== -1) {
         // Review roles of admin
-        console.log('admin', roles);
         return roles.indexOf('ROLE_ADMIN') != -1;
       }
 
