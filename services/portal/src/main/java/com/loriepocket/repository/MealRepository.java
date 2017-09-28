@@ -19,4 +19,5 @@ public interface MealRepository extends PagingAndSortingRepository<Meal, Long> {
     public Meal findByIdAndFetchUser(@Param("id")Long id);
     public Page<Meal> findAllByUserId(Long id, Pageable pageable);
     public Page<Meal> findByConsumedDateBetween(Date start, Date end, Pageable pageable);
+    public Page<Meal> findByUserIdAndConsumedDateBetween(Long id, Date start, Date end, Pageable pageable);
 }

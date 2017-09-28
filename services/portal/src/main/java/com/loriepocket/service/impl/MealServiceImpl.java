@@ -30,6 +30,11 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
+    public Page<Meal> findByUserIdAndConsumedDateBetween(Long id, Date start, Date end, Pageable pageable) {
+        return mealRepository.findByUserIdAndConsumedDateBetween(id, start, end, pageable);
+    }
+
+    @Override
     public Page<Meal> findAll(Pageable pageable) {
         return mealRepository.findAll(pageable);
     }

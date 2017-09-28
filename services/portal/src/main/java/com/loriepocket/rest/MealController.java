@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpEntity;
@@ -17,6 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -35,9 +39,19 @@ public class MealController {
 
     @RequestMapping( method = RequestMethod.GET, value= "/meal")
     @PreAuthorize("#userId == principal.id or hasAnyRole('MANAGER','ADMIN')")
-    HttpEntity<PagedResources<Meal>> loadAll(@PathVariable( name = "userId" ) Long userId, Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
-        Page<Meal> meals = this.mealService.findAllByUserId(userId, pageable);
-        Link link = linkTo(methodOn(MealController.class).loadAll(userId, pageable, assembler)).withRel("meals");
+    HttpEntity<PagedResources<Meal>> loadAll(@PathVariable( name = "userId" ) Long userId,
+                                             @RequestParam( name = "startDate", required = false )@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+                                             @RequestParam( name = "endDate", required = false ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate,
+                                             Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
+
+        Page<Meal> meals;
+        if(startDate != null && endDate != null) {
+            meals = this.mealService.findByUserIdAndConsumedDateBetween(userId, startDate, endDate, pageable);
+        } else {
+            meals = this.mealService.findAllByUserId(userId, pageable);
+        }
+        Link link = linkTo(methodOn(MealController.class)
+                .loadAll(userId, startDate, endDate, pageable, assembler)).withRel("meals");
         return new ResponseEntity<>(assembler.toResource(meals, new MealResourceAssembler(userId), link), HttpStatus.OK);
     }
 
