@@ -38,7 +38,7 @@ class Header extends Component {
     } else {
       return [
         <li key={1} className="bold"><Link href="/signin" className="waves-effect waves-teal"><i className="material-icons small">input</i>Sign In</Link></li>,
-        <li key={2} className="bold"><Link href="/signup" className="waves-effect waves-teal"><i className="material-icons small">mode_edit</i>Sign Out</Link></li>
+        <li key={2} className="bold"><Link href="/signup" className="waves-effect waves-teal"><i className="material-icons small">mode_edit</i>Sign Up</Link></li>
       ];
     }
   }
