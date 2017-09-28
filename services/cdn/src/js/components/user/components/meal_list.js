@@ -90,4 +90,4 @@ class MealList extends Component {
 
 export default connect(
   (state) => { return { meals: state.meals, meal: state.meal, activeProfile: state.activeProfile }  }, // , me: state.me
-  { fetchMeals, deleteMeal, selectMeal } )(MealList); // , findMyself
+  { fetchMeals, deleteMeal, selectMeal } )(MealList);

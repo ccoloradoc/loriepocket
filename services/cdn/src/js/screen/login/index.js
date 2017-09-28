@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import Application from './components/app';
@@ -11,14 +11,19 @@ import { configureSecuredAxios } from 'authentication/services';
 
 import { AdminScreen, ProfileScreen } from 'screen';
 
-import { AUTH_USER } from 'authentication/actions';
+import { AUTH_USER, MYSELF } from 'authentication/actions';
 import store from './store';
 
-if(localStorage.getItem('token')) {
-  store.dispatch({ type: AUTH_USER });
-}
-
 configureSecuredAxios(store);
+
+import securedConnection from 'authentication/services';
+
+if(localStorage.getItem('token')) {
+  store.dispatch({
+    type: AUTH_USER,
+    payload: localStorage.getItem('user')
+  });
+}
 
 class Login extends Component {
   render() {
@@ -31,9 +36,9 @@ class Login extends Component {
             <Route path="signout" component={SignoutScreen} />
             <Route path="signup" component={SignupScreen} />
             <Route path="profile" component={RequireAuth(ProfileScreen)}>
-              <Route path=":id" component={RequireAuth(ProfileScreen)}/>
+              <Route path=":id" component={RequireAuth(ProfileScreen, ['ADMIN', 'MANAGER'])}/>
             </Route>
-            <Route path="admin" component={RequireAuth(AdminScreen)} />
+            <Route path="admin" component={RequireAuth(AdminScreen, ['ADMIN'])} />
           </Route>
         </Router>
       </Provider>

@@ -18,6 +18,8 @@ export default function(state = {}, action) {
 
 export function myselfReducer(state = {}, action) {
   switch (action.type) {
+    case AUTH_USER:
+      return action.payload;
     case MYSELF:
       return action.payload;
     default:

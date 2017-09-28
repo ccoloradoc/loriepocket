@@ -17,10 +17,19 @@ export function singin(credentials) {
   return function(dispatch) {
     axios.post(AUTH_SIGNIN_URL, qs.stringify(credentials))
       .then((response) => {
-        // Alter state to indicate user has logged in
-        dispatch({ type: AUTH_USER });
         // Save jwt token
         localStorage.setItem('token', response.data.access_token);
+        // Alter state to indicate user has logged in
+        securedConnection.get('/auth/me').then(({data}) => {
+          // Save user
+          localStorage.setItem('user', data);
+          // Save user authorities
+          localStorage.setItem('authorities', data.authorities.map((auth) => auth.name ));
+          dispatch({
+            type: AUTH_USER,
+            payload: data
+          });
+        });
         // Forward to profile
         browserHistory.push('/profile');
       })
@@ -55,6 +64,8 @@ export function signout(message) {
     console.log('signout')
     // Remove token from session
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('authorities');
     // Forward to signin
     browserHistory.push('/signin' + (message ? '?msg=true' : ''));
     // Update auth state
