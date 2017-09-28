@@ -3,6 +3,7 @@ package com.loriepocket.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -16,8 +17,11 @@ public class Meal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String name;
+    @NotNull
     private Integer calories;
+    @NotNull
     private Date consumedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

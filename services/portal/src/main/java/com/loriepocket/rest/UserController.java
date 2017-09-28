@@ -2,7 +2,6 @@ package com.loriepocket.rest;
 
 import com.loriepocket.model.Authority;
 import com.loriepocket.model.User;
-import com.loriepocket.rest.assembler.MealResourceAssembler;
 import com.loriepocket.rest.assembler.UserResource;
 import com.loriepocket.rest.assembler.UserResourceAssembler;
 import com.loriepocket.service.AuthorityService;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -61,14 +61,15 @@ public class UserController {
     @RequestMapping( method = GET, value = "/user/{userId}" )
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public UserResource loadById(@PathVariable Long userId ) {
-        return userResourceAssembler.toResource(this.userService.findById(userId));
+        User user = findAndValidateUser(userId);
+        return userResourceAssembler.toResource(user);
     }
 
     @RequestMapping(method = PUT, value = "/user/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public User updateUser(@PathVariable Long userId, @RequestBody User payload) {
+    public User updateUser(@PathVariable Long userId, @Valid @RequestBody User payload) {
         // Find user
-        User user = this.userService.findById(userId);
+        User user = findAndValidateUser(userId);
         // Copy over the values to be updated
         user.setUsername(payload.getUsername());
         user.setFirstname(payload.getFirstname());
@@ -81,9 +82,8 @@ public class UserController {
     @RequestMapping(method = DELETE, value = "/user/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(@PathVariable Long userId) {
-        User user = this.userService.findById(userId);
-        if(user != null)
-            this.userService.delete(user);
+        User user = findAndValidateUser(userId);
+        this.userService.delete(user);
     }
 
     /*
@@ -101,5 +101,12 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public List<Authority> getAutorities() {
         return authorityService.findAll();
+    }
+
+    private User findAndValidateUser(Long id) {
+        User user = this.userService.findById(id);
+        if(user == null)
+            throw new IllegalArgumentException("Could not find a user with id :" + id);
+        return user;
     }
 }
