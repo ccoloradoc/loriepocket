@@ -7,19 +7,13 @@ class AdminScreen extends Component {
     return (
       <div className="flex-container">
         <div className="row">
-          <div className="col s8">
+          <div className="col s12">
             <UserList/>
-          </div>
-          <div className="col s4">
-            <UserForm/>
           </div>
         </div>
         <div className="row">
-          <div className="col s8">
+          <div className="col s12">
             <InviteList/>
-          </div>
-          <div className="col s4">
-
           </div>
         </div>
       </div>

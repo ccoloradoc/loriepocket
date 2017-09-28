@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { fetchUsers, selectUser, deleteUser } from '../actions';
+import { UserForm } from 'admin';
 
 class UserList extends Component {
   componentWillMount() {
@@ -64,9 +65,26 @@ class UserList extends Component {
            </tbody>
          </table>
         </div>
+        { this.renderForm() }
       </div>
     );
   }
+
+  renderForm() {
+    if(this.props.user !== null) {
+      return (
+        <div className="overlay-modal">
+          <div>
+            <UserForm onComplete={ this.closeModal.bind(this) }/>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  closeModal() {
+    this.props.selectUser(null);
+  }
 }
 
-export default connect((state) => { return { users: state.users }  }, { fetchUsers, selectUser, deleteUser } )(UserList);
+export default connect((state) => { return { users: state.users, user: state.user }  }, { fetchUsers, selectUser, deleteUser } )(UserList);

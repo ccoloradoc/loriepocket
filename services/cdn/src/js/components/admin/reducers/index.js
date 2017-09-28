@@ -29,6 +29,8 @@ export function userListReducer(state = {}, action) {
 export function userReducer(state = null, action) {
   switch (action.type) {
     case SELECT_USER:
+      if(action.payload == null)
+        return null;
       return {...action.payload };
       break;
     default:

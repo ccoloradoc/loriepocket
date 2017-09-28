@@ -51,10 +51,11 @@ export function selectUser(user) {
   }
 }
 
-export function updateUser(user) {
+export function updateUser(user, callback) {
   return function(dispatch) {
     axios.put(`/api/user/${user.id}`, user)
       .then((response) => {
+        if(callback) callback();
         dispatch({
           type: UPDATE_USER,
           payload: response.data

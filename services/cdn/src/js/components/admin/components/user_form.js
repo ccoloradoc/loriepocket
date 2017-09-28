@@ -10,7 +10,7 @@ class UserForm extends Component {
   }
 
   onSubmit(values) {
-    this.props.updateUser(values);
+    this.props.updateUser(values, this.props.onComplete);
   }
 
   render() {
@@ -30,6 +30,7 @@ class UserForm extends Component {
             <Field name="authorities" type="hidden" component={ HiddenField }/>
             { this.renderRoles() }
             <div className="input-field col s12 right-align">
+              <button type="button" onClick={ () => { this.props.onComplete() } } className="waves-effect waves-light btn #e0e0e0 grey lighten-1 mrs">Cancel</button>
               <button type="submit" className="waves-effect waves-light btn right-align">Save</button>
             </div>
           </form>
@@ -39,12 +40,10 @@ class UserForm extends Component {
   }
 
   renderRoles() {
+    if(!this.props.stateForm || !this.props.stateForm.values.authorities)
+      return;
+
     const options = this.props.roles;
-    // [
-    //     { id: '1', name: 'ROLE_USER' },
-    //     { id: '2', name: 'ROLE_ADMIN' },
-    //     { id: '3', name: 'ROLE_MANAGER' }
-    // ];
     const formAutorities = this.props.stateForm.values.authorities;
 
     return _.map(options, (option) => {
