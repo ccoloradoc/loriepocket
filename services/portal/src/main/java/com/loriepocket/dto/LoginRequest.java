@@ -3,13 +3,19 @@ package com.loriepocket.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by cristian.colorado on 9/19/2017.
  */
 public class LoginRequest {
+    @NotNull
     private String username;
+    @NotNull
     private String password;
+    @NotNull
     private String firstname;
+    @NotNull
     private String lastname;
 
     public LoginRequest() {

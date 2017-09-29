@@ -9,7 +9,7 @@ import { fetchMeals, deleteMeal, selectMeal } from '../actions';
 
 class MealList extends Component {
   componentWillReceiveProps(nextProps) {
-    if(nextProps.user && nextProps.meals == null) {
+    if(nextProps.user.links && nextProps.meals == null) {
       this.props.fetchMeals(nextProps.user, { size: 10 });
     }
   }

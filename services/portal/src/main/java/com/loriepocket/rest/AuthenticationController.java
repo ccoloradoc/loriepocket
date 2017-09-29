@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.security.Principal;
 
 /**
@@ -63,7 +63,7 @@ public class AuthenticationController {
 
     @RequestMapping(value="/signup", method= RequestMethod.POST, consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces={ MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> signUp(LoginRequest loginRequest) {
+    public ResponseEntity<?> signUp(@Valid LoginRequest loginRequest) {
         if(userService.findByUsername(loginRequest.getUsername()) == null) {
             // Convert POJO
             User user = loginRequestToUserConverter.convert(loginRequest);

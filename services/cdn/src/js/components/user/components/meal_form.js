@@ -5,16 +5,16 @@ import { InputField, HiddenField, CheckboxField, DatePicker, TimePicker } from '
 import { updateMeal, saveMeal, updateConsumedDate, updateConsumedDateTime, selectMeal } from '../actions';
 
 class MealForm extends Component {
-  componentWillReceiveProps(props) {
-    if(props.initialValues) {
-      this.initDatepicker(props.initialValues);
-    }
+  componentDidMount() {
+      if(this.props.initialValues) {
+        this.initDatepicker(this.props.initialValues);
+      }
   }
 
   initDatepicker(meal) {
     let now = meal.consumedDate ? new Date(meal.consumedDate) : new Date();
 
-    var $input = $('.datepicker').pickadate({
+    var $input = $('input[name="consumedDatePlaceholder"]').pickadate({
       selectMonths: true, // Creates a dropdown to control month
       selectYears: 15, // Creates a dropdown of 15 years to control year,
       today: 'Today',
