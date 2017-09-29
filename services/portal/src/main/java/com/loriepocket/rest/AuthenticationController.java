@@ -9,6 +9,7 @@ import com.loriepocket.dto.UserTokenState;
 import com.loriepocket.rest.assembler.UserResource;
 import com.loriepocket.rest.assembler.UserResourceAssembler;
 import com.loriepocket.security.TokenHelper;
+import com.loriepocket.security.auth.TokenBasedAuthentication;
 import com.loriepocket.service.AuthorityService;
 import com.loriepocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
-    public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request, HttpServletResponse response, Principal principal) {
 
         String authToken = tokenHelper.getToken( request );
         if (authToken != null && tokenHelper.canTokenBeRefreshed(authToken)) {
@@ -95,7 +96,7 @@ public class AuthenticationController {
             // Add cookie to response
             response.addCookie( authCookie );
 
-            UserTokenState userTokenState = new UserTokenState(refreshedToken, EXPIRES_IN);
+            UserTokenState userTokenState = new UserTokenState(refreshedToken, EXPIRES_IN, ((User)((TokenBasedAuthentication)principal).getPrincipal()));
             return ResponseEntity.ok(userTokenState);
         } else {
             UserTokenState userTokenState = new UserTokenState();
