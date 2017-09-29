@@ -1,5 +1,7 @@
 package com.loriepocket.rest;
 
+import com.loriepocket.converter.MealRequestToMealConverter;
+import com.loriepocket.dto.MealRequest;
 import com.loriepocket.model.Meal;
 import com.loriepocket.model.User;
 import com.loriepocket.rest.assembler.MealResourceAssembler;
@@ -37,19 +39,8 @@ public class MealController {
     @Autowired
     private UserService userService;
 
-    private User findAndValidateUser(Long id) {
-        User user = this.userService.findById(id);
-        if(user == null)
-            throw new IllegalArgumentException("Could not find a user with id :" + id);
-        return user;
-    }
-
-    private Meal findAndValidateMeal(Long id) {
-        Meal meal = this.mealService.findById(id);
-        if(meal == null)
-            throw new IllegalArgumentException("Could not find a meal with id :" + id);
-        return meal;
-    }
+    @Autowired
+    private MealRequestToMealConverter mealRequestToMealConverter;
 
     @RequestMapping( method = RequestMethod.GET, value= "/meal")
     @PreAuthorize("#userId == principal.id or hasAnyRole('MANAGER','ADMIN')")
@@ -58,9 +49,6 @@ public class MealController {
                                              @RequestParam( name = "endDate", required = false ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate,
                                              Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
 
-
-        findAndValidateUser(userId);
-
         Page<Meal> meals;
         if(startDate != null && endDate != null) {
             meals = this.mealService.findByUserIdAndConsumedDateBetween(userId, startDate, endDate, pageable);
@@ -68,40 +56,46 @@ public class MealController {
             meals = this.mealService.findAllByUserId(userId, pageable);
         }
         Link link = linkTo(methodOn(MealController.class)
-                .loadAll(userId, startDate, endDate, pageable, assembler)).withRel("meals");
+                .loadAll(userId, startDate, endDate, pageable, assembler))
+                .withRel("meals");
         return new ResponseEntity<>(assembler.toResource(meals, new MealResourceAssembler(userId), link), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/meal/{mealId}")
     @PreAuthorize("#userId == principal.id or hasAnyRole('MANAGER','ADMIN')")
     public Meal getMeal(@PathVariable Long userId, @PathVariable Long mealId) {
-        findAndValidateUser(userId);
-        findAndValidateMeal(mealId);
-        return this.mealService.findById(mealId);
+        Meal meal = this.findAndValidateMeal(mealId);
+        // Meal does not belong to user
+        if(meal.getUser().getId() != userId)
+            throw new IllegalArgumentException("Wrong route composition");
+
+        return meal;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/meal")
     @PreAuthorize("#userId == principal.id or hasAnyRole('MANAGER','ADMIN')")
-    public Meal saveUser(@PathVariable Long userId, @Valid @RequestBody Meal payload) {
-        User user = findAndValidateUser(userId);
-        payload.setUser(user);
-        return this.mealService.saveOrUpdate(payload);
+    public Meal saveUser(@PathVariable Long userId, @Valid @RequestBody MealRequest payload) {
+        if(payload.getId() != null)
+            throw new IllegalArgumentException("Meal ID is not needed to create a new entry");
+        User user = this.findAndValidateUser(userId);
+        Meal meal = mealRequestToMealConverter.convert(payload);
+        meal.setUser(user);
+        return this.mealService.saveOrUpdate(meal);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/meal/{mealId}")
     @PreAuthorize("#userId == principal.id or hasAnyRole('MANAGER','ADMIN')")
-    public Meal updateUser(@PathVariable Long userId, @PathVariable Long mealId, @Valid @RequestBody Meal payload) {
-        // Find user
-        User user = findAndValidateUser(userId);
+    public Meal updateUser(@PathVariable Long userId, @PathVariable Long mealId, @Valid @RequestBody MealRequest payload) {
+        if(payload.getId() != mealId)
+            throw new IllegalArgumentException("Payload ID does not match Route ID");
         // Find meal
-        Meal meal = findAndValidateMeal(mealId);
+        Meal currentMeal = this.findAndValidateMeal(mealId);
+        // Meal does not belong to user
+        if(currentMeal.getUser().getId() != userId)
+            throw new IllegalArgumentException("Payload ID does not match Route ID");
 
-        // Copy over the values to be updated
-        meal.setId(mealId);
-        meal.setName(payload.getName());
-        meal.setCalories(payload.getCalories());
-        meal.setConsumedDate(payload.getConsumedDate());
-        meal.setUser(user);
+        Meal meal = mealRequestToMealConverter.convert(payload);
+        meal.setUser(currentMeal.getUser());
         // Update user
         return this.mealService.saveOrUpdate(meal);
     }
@@ -109,10 +103,26 @@ public class MealController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/meal/{mealId}")
     @PreAuthorize("#userId == principal.id or hasAnyRole('MANAGER','ADMIN')")
     public void deleteUser(@PathVariable Long userId, @PathVariable Long mealId) {
-        User user = findAndValidateUser(userId);
-        Meal meal = mealService.findByIdAndFetchUser(mealId);
+        Meal currentMeal = this.findAndValidateMeal(mealId);
+        // Meal does not belong to user
+        if(currentMeal.getUser().getId() != userId)
+            throw new IllegalArgumentException("Wrong route composition");
         // Meal exist and belongs to the user stated in path
-        if(meal != null && meal.getUser().getId() == userId)
-            this.mealService.delete(mealId);
+        this.mealService.delete(mealId);
     }
+
+    private User findAndValidateUser(Long id) {
+        User user = this.userService.findById(id);
+        if(user == null)
+            throw new IllegalArgumentException("Could not find a user with id :" + id);
+        return user;
+    }
+
+    private Meal findAndValidateMeal(Long id) {
+        Meal meal = this.mealService.findByIdAndFetchUser(id);
+        if(meal == null)
+            throw new IllegalArgumentException("Could not find a meal with id :" + id);
+        return meal;
+    }
+
 }

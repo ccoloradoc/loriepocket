@@ -41,10 +41,10 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<Object>(model, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(JwtException.class)
-    private ResponseEntity<Object> handleExpiredJwtException(JwtException ex) {
-        Map<String, Object> model = this.getDefaultErrorAttributes(ex, HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<Object>(model, HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(IllegalArgumentException.class)
+    private ResponseEntity<Object> handleExpiredJwtException(IllegalArgumentException ex) {
+        Map<String, Object> model = this.getDefaultErrorAttributes(ex, HttpStatus.CONFLICT);
+        return new ResponseEntity<Object>(model, HttpStatus.CONFLICT);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.loriepocket.rest;
 
+import com.loriepocket.converter.UserRequestToUserConverter;
+import com.loriepocket.dto.UserRequest;
 import com.loriepocket.model.Authority;
 import com.loriepocket.model.User;
 import com.loriepocket.rest.assembler.UserResource;
@@ -49,6 +51,9 @@ public class UserController {
     @Autowired
     private UserResourceAssembler userResourceAssembler;
 
+    @Autowired
+    private UserRequestToUserConverter userRequestToUserConverter;
+
     @RequestMapping( method = GET, value= "/user")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     HttpEntity<PagedResources<User>> loadAllPageable(Pageable pageable, PagedResourcesAssembler assembler) throws Exception{
@@ -67,14 +72,16 @@ public class UserController {
 
     @RequestMapping(method = PUT, value = "/user/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public User updateUser(@PathVariable Long userId, @Valid @RequestBody User payload) {
-        // Find user
-        User user = findAndValidateUser(userId);
-        // Copy over the values to be updated
-        user.setUsername(payload.getUsername());
-        user.setFirstname(payload.getFirstname());
-        user.setLastname(payload.getLastname());
-        user.setAuthorities((List<Authority>) payload.getAuthorities());
+    public User updateUser(@PathVariable Long userId, @Valid @RequestBody UserRequest payload) {
+        // Route ID and Payload ID does not match
+        if(payload.getId() != userId)
+            throw new IllegalArgumentException("Payload ID does not match Route ID");
+        // Validate user existence
+        User existentUser = findAndValidateUser(userId);
+        // Parse payload
+        User user = userRequestToUserConverter.convert(payload);
+        // Keep current password
+        user.setPassword(existentUser.getPassword());
         // Update user
         return this.userService.saveOrUpdate(user);
     }
@@ -86,27 +93,22 @@ public class UserController {
         this.userService.delete(user);
     }
 
-    /*
-     *  We are not using userService.findByUsername here(we could),
-     *  so it is good that we are making sure that the user has role "ROLE_USER"
-     *  to access this endpoint.
-     */
-    @RequestMapping("/whoami")
-    @PreAuthorize("hasRole('USER')")
-    public User user(Principal user) {
-        return this.userService.findByUsername(user.getName());
-    }
-
     @RequestMapping("/role")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<Authority> getAutorities() {
+    public List<Authority> getAuthorities() {
         return authorityService.findAll();
     }
 
-    private User findAndValidateUser(Long id) {
+    /**
+     * Helper method in order to find out if user exist otherwise it throws IllegalArgumentException
+     * @param id
+     * @return User the user requested
+     * @throws IllegalArgumentException
+     */
+    private User findAndValidateUser(Long id) throws  IllegalArgumentException {
         User user = this.userService.findById(id);
         if(user == null)
-            throw new IllegalArgumentException("Could not find a user with id :" + id);
+            throw new IllegalArgumentException("Could not find a user with ID :" + id);
         return user;
     }
 }
