@@ -42,51 +42,26 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        try {
-            String username = null;
-            String authToken = tokenHelper.getToken(request);
-            if (authToken != null) {
-                // get username from token
-                try {
-                    username = tokenHelper.getUsernameFromToken(authToken);
-                } catch (IllegalArgumentException e) {
-                    logger.error("an error occured during getting username from token", e);
-                }
-
-                if (username != null) {
-                    // get user
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    // create authentication
-                    TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);
-                    authentication.setToken(authToken);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+        String username = null;
+        String authToken = tokenHelper.getToken(request);
+        if (authToken != null) {
+            // get username from token
+            try {
+                username = tokenHelper.getUsernameFromToken(authToken);
+            } catch (IllegalArgumentException e) {
+                logger.error("an error occured during getting username from token", e);
             }
 
-            chain.doFilter(request, response);
-        } catch(ExpiredJwtException ex) {
-            Map<String, Object> model = this.getDefaultErrorAttributes(ex, HttpStatus.UNAUTHORIZED);
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(convertObjectToJson(model));
+            if (username != null) {
+                // get user
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                // create authentication
+                TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);
+                authentication.setToken(authToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
+
+        chain.doFilter(request, response);
     }
-
-    private Map<String, Object> getDefaultErrorAttributes(Exception ex, HttpStatus status) {
-        Map<String, Object> errorAttributes = new LinkedHashMap<>();
-
-        errorAttributes.put("timestamp", Calendar.getInstance().getTimeInMillis());
-        errorAttributes.put("status", status.value());
-        errorAttributes.put("error", status.getReasonPhrase());
-        errorAttributes.put("message", ex.getMessage());
-        return errorAttributes;
-    }
-
-    private String convertObjectToJson(Object object) throws JsonProcessingException {
-        if (object == null) {
-            return null;
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
-    }
-
 }

@@ -81,6 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**", "/h2-console/**").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService), BasicAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), TokenAuthenticationFilter.class)
                 .formLogin()
                 .loginPage("/auth/login")
                 .successHandler(authenticationSuccessHandler)
