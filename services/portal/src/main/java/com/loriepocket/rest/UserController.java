@@ -36,7 +36,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  */
 
 @RestController
-@RequestMapping( value = "/api", produces = MediaType.APPLICATION_JSON_VALUE )
+@RequestMapping( value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE )
 public class UserController {
 
     @Autowired
@@ -48,7 +48,7 @@ public class UserController {
     @Autowired
     private UserRequestToUserConverter userRequestToUserConverter;
 
-    @RequestMapping( method = GET, value= "/")
+    @RequestMapping( method = GET)
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     HttpEntity<PagedResources<User>> loadAllPageable(Pageable pageable, PagedResourcesAssembler assembler) throws Exception{
         Page<User> users  = this.userService.findAll(pageable);

@@ -30,12 +30,10 @@ public class Authority implements GrantedAuthority {
         this.name = name;
     }
 
-//    @JsonIgnore
     public String getName() {
         return name;
     }
 
-//    @JsonIgnore
     public Long getId() {
         return id;
     }
@@ -43,5 +41,4 @@ public class Authority implements GrantedAuthority {
     public void setId(Long id) {
         this.id = id;
     }
-
 }
