@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -112,17 +113,17 @@ public class MealController {
     }
 
     private User findAndValidateUser(Long id) {
-        User user = this.userService.findById(id);
-        if(user == null)
-            throw new IllegalArgumentException("Could not find a user with id :" + id);
-        return user;
+        Optional<User> user = this.userService.findById(id);
+        if(user.isPresent())
+            return user.get();
+        throw new IllegalArgumentException("Could not find a user with id :" + id);
     }
 
     private Meal findAndValidateMeal(Long id) {
-        Meal meal = this.mealService.findByIdAndFetchUser(id);
-        if(meal == null)
-            throw new IllegalArgumentException("Could not find a meal with id :" + id);
-        return meal;
+        Optional<Meal> meal = this.mealService.findByIdAndFetchUser(id);
+        if(meal.isPresent())
+            return meal.get();
+        throw new IllegalArgumentException("Could not find a meal with id :" + id);
     }
 
 }

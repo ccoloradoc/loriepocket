@@ -5,13 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by cristian.colorado on 9/25/2017.
  */
 public interface MealService {
-    public Meal findById(Long id);
-    public Meal findByIdAndFetchUser(Long id);
+    public Optional<Meal> findById(Long id);
+    public Optional<Meal> findByIdAndFetchUser(Long id);
     public Page<Meal> findByConsumedDateBetween(Date start, Date end, Pageable pageable);
     public Page<Meal> findByUserIdAndConsumedDateBetween(Long id, Date start, Date end, Pageable pageable);
     public Page<Meal> findAllByUserId(Long id, Pageable pageable);

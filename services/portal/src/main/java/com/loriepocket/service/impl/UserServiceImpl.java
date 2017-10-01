@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by cristian.colorado
@@ -22,14 +23,14 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User findByUsername( String username ) throws UsernameNotFoundException {
+    public Optional<User> findByUsername( String username ) throws UsernameNotFoundException {
         User u = userRepository.findByUsername( username );
-        return u;
+        return Optional.ofNullable(u);
     }
 
-    public User findById( Long id ) throws AccessDeniedException {
+    public Optional<User> findById(Long id ) throws AccessDeniedException {
         User u = userRepository.findOne( id );
-        return u;
+        return Optional.ofNullable(u);
     }
 
     public Page<User> findAll(Pageable pageable) {

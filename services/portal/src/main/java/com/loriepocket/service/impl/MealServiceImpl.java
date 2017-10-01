@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by cristian.colorado on 9/25/2017.
@@ -20,8 +21,9 @@ public class MealServiceImpl implements MealService {
     private MealRepository mealRepository;
 
     @Override
-    public Meal findById(Long id) {
-        return mealRepository.findOne(id);
+    public Optional<Meal> findById(Long id) {
+        Meal meal = mealRepository.findOne(id);
+        return Optional.ofNullable(meal);
     }
 
     @Override
@@ -40,8 +42,9 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public Meal findByIdAndFetchUser(Long id) {
-        return mealRepository.findByIdAndFetchUser(id);
+    public Optional<Meal> findByIdAndFetchUser(Long id) {
+        Meal meal = mealRepository.findByIdAndFetchUser(id);
+        return Optional.ofNullable(meal);
     }
 
     @Override

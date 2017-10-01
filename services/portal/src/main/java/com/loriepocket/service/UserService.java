@@ -5,12 +5,14 @@ import com.loriepocket.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 /**
  * Created by cristian.colorado
  */
 public interface UserService {
-    public User findById(Long id);
-    public User findByUsername(String username);
+    public Optional<User> findById(Long id);
+    public Optional<User> findByUsername(String username);
     public Page<User> findAll(Pageable pageable);
     public User saveOrUpdate(User user);
     public void delete(User user);

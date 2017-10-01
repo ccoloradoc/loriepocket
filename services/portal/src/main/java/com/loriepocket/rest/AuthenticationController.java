@@ -14,6 +14,7 @@ import com.loriepocket.service.AuthorityService;
 import com.loriepocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.config.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Optional;
 
 /**
  * Created by cristian.colorado
@@ -106,7 +109,10 @@ public class AuthenticationController {
 
     @RequestMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public UserResource user(Principal user) {
-        return userResourceAssembler.toResource(this.userService.findByUsername(user.getName()));
+    public UserResource findUser(Principal principal) {
+        Optional<User> user = this.userService.findByUsername(principal.getName());
+        if(user.isPresent())
+            return userResourceAssembler.toResource(user.get());
+        throw  new IllegalArgumentException("Could not found resource for user name " + principal.getName());
     }
 }
