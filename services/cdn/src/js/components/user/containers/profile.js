@@ -7,7 +7,14 @@ import { SearchBar, MealForm } from 'user';
 
 class Profile extends Component {
   componentWillMount() {
-    this.props.setActiveProfile(this.props.params.id, this.props.filter);
+    this.props.setActiveProfile(this.props.params.id, { page: 0, size: 10 });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // Route may have changed
+    if(nextProps.params.id !== this.props.params.id) {
+      this.props.setActiveProfile(nextProps.params.id, { page: 0, size: 10 });
+    }
   }
 
   renderHeader() {
