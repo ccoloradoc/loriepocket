@@ -19,8 +19,7 @@ const rootReducer = combineReducers({
     invites: inviteListReducer,
     meals: mealListReducer,
     meal: mealReducer,
-    me: myselfReducer,
-    activeProfile: activeProfileReducer,
+    profile: activeProfileReducer,
     page: pageReducer
 });
 

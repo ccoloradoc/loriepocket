@@ -12,8 +12,7 @@ export function configureSecuredAxios(store) {
   // Configuring interceptor to refresh token if posible
   axiosJwt.interceptors.response.use(undefined, (error) => {
     const originalRequest = error.config;
-    // console.log(error.response);
-    if ( error.response.status === 401 && !originalRequest._retry) {
+    if ( error.response.status === 500 || error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       const token = window.localStorage.getItem('token');
@@ -21,7 +20,6 @@ export function configureSecuredAxios(store) {
       return axios.get('/auth/refresh', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
         .then(({data}) => {
           // Token was refreshed successfully
-          console.log('interceptor', data);
           localStorage.setItem('token', data.token);
           axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
           originalRequest.headers['Authorization'] = 'Bearer ' + data.token;
@@ -32,19 +30,6 @@ export function configureSecuredAxios(store) {
             text: 'Your session has expired!',
             type: 'danger'
           }));
-          // // Could not refresh token
-          // console.log('Could not refresh token');
-          // // Remove token from session
-          // localStorage.removeItem('token');
-          // // Update auth state
-          // store.dispatch({ type: UNAUTH_USER });
-          // // Display message
-          // store.dispatch({ type: AUTH_ERROR, payload: {
-          //   text: 'Your session has expired!',
-          //   type: 'danger'
-          // }});
-          // // Forward to signin
-          // browserHistory.push('/signin?msg=true');
         });
     } else {
         return Promise.reject(error);

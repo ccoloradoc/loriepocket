@@ -11,7 +11,7 @@ import { configureSecuredAxios } from 'authentication/services';
 
 import { AdminScreen, ManagerScreen, ProfileScreen } from 'screen';
 
-import { AUTH_USER, MYSELF } from 'authentication/actions';
+import { AUTH_USER } from 'authentication/actions';
 import store from './store';
 
 configureSecuredAxios(store);
@@ -20,8 +20,7 @@ import securedConnection from 'authentication/services';
 
 if(localStorage.getItem('token')) {
   store.dispatch({
-    type: AUTH_USER,
-    payload: localStorage.getItem('user')
+    type: AUTH_USER
   });
 }
 

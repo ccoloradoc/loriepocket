@@ -7,31 +7,25 @@ export const AUTH_USER = 'auth_user';
 export const UNAUTH_USER = 'unauth_user';
 export const AUTH_ERROR = 'auth_error';
 export const AUTH_ERROR_CLEANUP = 'auth_error_cleanup';
-export const MYSELF = 'myself';
 
 const AUTH_SIGNIN_URL = '/auth/login';
 const AUTH_SIGNUP_URL = '/auth/signup';
 
 export function singin(credentials) {
-
   return function(dispatch) {
     axios.post(AUTH_SIGNIN_URL, qs.stringify(credentials))
       .then((response) => {
         // Save jwt token
-        localStorage.setItem('token', response.data.access_token);
+        localStorage.setItem('token', response.data.accessToken);
         // Alter state to indicate user has logged in
         securedConnection.get('/auth/me').then(({data}) => {
-          // Save user
-          localStorage.setItem('user', data);
           // Save user authorities
+          localStorage.setItem('userId', data.id);
           localStorage.setItem('authorities', data.authorities.map((auth) => auth.name ));
-          dispatch({
-            type: AUTH_USER,
-            payload: data
-          });
+          dispatch({ type: AUTH_USER, payload: data });
+          // Forward to profile
+          browserHistory.push('/profile');
         });
-        // Forward to profile
-        browserHistory.push('/profile');
       })
       .catch(() => {
           // Alter state to indicate user has logged out
@@ -63,7 +57,7 @@ export function signout(message) {
   return function(dispatch) {
     // Remove token from session
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('userId');
     localStorage.removeItem('authorities');
     // Forward to signin
     browserHistory.push('/signin' + (message ? '?msg=true' : ''));
@@ -74,18 +68,4 @@ export function signout(message) {
 
 export function clearAuthError() {
   return { type: AUTH_ERROR_CLEANUP };
-}
-
-
-export function findMyself(callback) {
-  return function(dispatch) {
-    securedConnection.get('/auth/me')
-      .then((response) => {
-        if(callback) callback(reponse.data);
-        dispatch({
-          type: MYSELF,
-          payload: response.data
-        })
-      })
-  }
 }

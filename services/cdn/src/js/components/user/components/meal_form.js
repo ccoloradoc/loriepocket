@@ -58,9 +58,9 @@ class MealForm extends Component {
     delete values['consumedDateTime'];
 
     if(values.id) {
-      this.props.updateMeal(values, this.props.activeProfile, this.props.onComplete);
+      this.props.updateMeal(values, this.props.profile, this.props.onComplete);
     } else {
-      this.props.saveMeal(values, this.props.activeProfile, this.props.onComplete);
+      this.props.saveMeal(values, this.props.profile, this.props.onComplete);
     }
 
   }
@@ -105,6 +105,6 @@ function validate(values) {
 }
 
 export default connect(
-  (state) => ({ initialValues: state.meal, activeProfile: state.activeProfile }) ,
+  (state) => ({ initialValues: state.meal, profile: state.profile }) ,
   { updateMeal, saveMeal, updateConsumedDate, updateConsumedDateTime, selectMeal })
   (reduxForm({ validate, form: 'MealForm', enableReinitialize: true })(MealForm));

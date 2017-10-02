@@ -9,23 +9,23 @@ class Profile extends Component {
   }
 
   renderHeader() {
-    const activeProfile  = this.props.activeProfile;
-    if(activeProfile.username)
-      return (<h4>{ `${activeProfile.firstname} ${activeProfile.lastname} (@${activeProfile.username}) `}</h4>);
+    const profile  = this.props.profile;
+    if(profile.username)
+      return (<h4>{ `${profile.firstname} ${profile.lastname} (@${profile.username}) `}</h4>);
   }
 
   render() {
-    const activeProfile = this.props.activeProfile;
+    const {profile, meals } = this.props;
     return (
       <div className="flex-container">
         <div className="row">
           <div className="col s12">
-            { this.renderHeader() }
+
           </div>
         </div>
         <div className="row">
           <div className="col s12">
-            <MealList user={activeProfile}/>
+            <MealList meals={meals}/>
           </div>
         </div>
       </div>
@@ -33,4 +33,4 @@ class Profile extends Component {
   }
 }
 
-export default connect((state) => { return { activeProfile: state.activeProfile }  }, { setActiveProfile } )(Profile);
+export default connect((state) => { return { profile: state.profile, meals: state.meals }  }, { setActiveProfile } )(Profile);

@@ -28,7 +28,7 @@ class SearchBar extends Component {
   }
 
   onSubmit(values) {
-    this.props.fetchMeals(this.props.activeProfile, {
+    this.props.fetchMeals(this.props.profile, {
       startDate: new Date(values.startDate),
       endDate: new Date(values.endDate),
       page: 0,
@@ -63,6 +63,6 @@ function validate(values) {
 
 
 export default connect(
-  (state) => ({ initialValues: state.filter, page: state.page, activeProfile: state.activeProfile }) ,
+  (state) => ({ initialValues: state.filter, page: state.page, profile: state.profile }) ,
   { updateDate, fetchMeals })
   (reduxForm({ validate, form: 'SearchBar', enableReinitialize: true })(SearchBar));
