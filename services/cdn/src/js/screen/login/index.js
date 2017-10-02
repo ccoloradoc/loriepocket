@@ -9,7 +9,8 @@ import Application from './components/app';
 import { SigninScreen, SignoutScreen, SignupScreen, RequireAuth } from 'authentication';
 import { configureSecuredAxios } from 'authentication/services';
 
-import { AdminScreen, ManagerScreen, ProfileScreen } from 'screen';
+import { AdminScreen, ManagerScreen } from 'screen';
+import { ProfileScreen } from 'user';
 
 import { AUTH_USER } from 'authentication/actions';
 import store from './store';

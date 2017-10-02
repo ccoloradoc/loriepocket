@@ -10,6 +10,36 @@ export const DELETE_MEAL = 'delete_meal';
 export const UPDATE_CONSUMED_DATE = 'update_consumed_date';
 export const UPDATE_CONSUMED_DATE_TIME = 'update_consumed_date_time';
 export const FILTER_DATE = 'filter_date';
+export const ACTIVE_PROFILE = 'active_profile';
+export const UPDATE_MEALS_FILTER = 'update_meals_filter';
+
+export function setActiveProfile(userId, filter) {
+  return function(dispatch) {
+    const request = [];
+    dispatch({ type: ACTIVE_PROFILE, payload: {} });
+    dispatch({ type: FETCH_MEALS, payload: [] });
+    if(userId) {
+      request.push(axios.get(`/api/user/${userId}`));
+      request.push(axios.get(`/api/user/${userId}/meal` + '?' + qs.stringify(filter)));
+    } else {
+      let id = localStorage.getItem('userId');
+      request.push(axios.get('/auth/me'));
+      request.push(axios.get(`/api/user/${id}/meal` + '?' + qs.stringify(filter)));
+    }
+
+    Promise.all(request).then(response => {
+      dispatch({
+        type: ACTIVE_PROFILE,
+        payload: response[0].data
+      });
+
+      dispatch({
+        type: FETCH_MEALS,
+        payload: response[1].data
+      });
+    });
+  }
+}
 
 export function fetchMeals(user, filter) {
   const url = user.links.find((link) => link.rel === 'meal').href;
@@ -20,6 +50,10 @@ export function fetchMeals(user, filter) {
           type: FETCH_MEALS,
           payload: response.data
         });
+        dispatch({
+          type: UPDATE_MEALS_FILTER,
+          payload: filter
+        })
       })
       .catch((error) => {
         console.log(error.response);

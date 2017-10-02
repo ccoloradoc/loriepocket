@@ -65,7 +65,7 @@ class UserList extends Component {
              { this.renderUsers() }
            </tbody>
          </table>
-         <Pagination move={this.move.bind(this)}/>
+         <Pagination page={this.props.page} move={this.move.bind(this)}/>
         </div>
         { this.renderForm() }
       </div>
@@ -94,4 +94,4 @@ class UserList extends Component {
   }
 }
 
-export default connect((state) => { return { users: state.users, user: state.user }  }, { fetchUsers, selectUser, deleteUser } )(UserList);
+export default connect((state) => { return { users: state.users, user: state.user, page: state.page }  }, { fetchUsers, selectUser, deleteUser } )(UserList);

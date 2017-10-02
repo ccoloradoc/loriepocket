@@ -3,7 +3,7 @@ import  React , { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { DatePicker } from 'form';
-import { updateDate, fetchMeals } from '../actions';
+import { updateDate } from '../actions';
 
 class SearchBar extends Component {
   componentDidMount() {
@@ -28,12 +28,11 @@ class SearchBar extends Component {
   }
 
   onSubmit(values) {
-    this.props.fetchMeals(this.props.profile, {
+    this.props.onSearch({
       startDate: new Date(values.startDate),
       endDate: new Date(values.endDate),
-      page: 0,
-      size: this.props.page.size
-    })
+      page: 0
+    });
   }
 
   render() {
@@ -62,7 +61,5 @@ function validate(values) {
 }
 
 
-export default connect(
-  (state) => ({ initialValues: state.filter, page: state.page, profile: state.profile }) ,
-  { updateDate, fetchMeals })
+export default connect( null, { updateDate })
   (reduxForm({ validate, form: 'SearchBar', enableReinitialize: true })(SearchBar));

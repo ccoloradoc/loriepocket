@@ -4,7 +4,6 @@ import Select from 'react-select';
 export function TimePicker(field) {
   const { meta: { active, touched, error, valid } } = field;
   const className = `text-help ${touched && error ? 'red-text' : ''}`;
-  // console.log('meta', field.meta);
 
   return (
     <div className="input-field col s12">

@@ -1,5 +1,15 @@
 import { FETCH_MEALS, UPDATE_MEAL, POST_MEAL, DELETE_MEAL, SELECT_MEAL,
-  UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME, FILTER_DATE } from '../actions';
+  UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME, FILTER_DATE, ACTIVE_PROFILE, UPDATE_MEALS_FILTER } from '../actions';
+
+export function activeProfileReducer(state = {}, action) {
+  switch (action.type) {
+    case ACTIVE_PROFILE:
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 export function mealListReducer(state = null, action) {
   switch (action.type) {
     case FETCH_MEALS:
@@ -55,7 +65,7 @@ export function mealFormReducer(state, action) {
   }
 }
 
-export function filterFormReducer(state, action) {
+export function filterFormReducer(state = {}, action) {
   switch(action.type) {
     // Allow to update hidden field
     case FILTER_DATE:
@@ -70,6 +80,16 @@ export function filterFormReducer(state, action) {
         }
       };
     break;
+    default:
+      return state;
+  }
+}
+
+export function filterReducer(state = { size: 10 }, action) {
+  switch (action.type) {
+    case UPDATE_MEALS_FILTER:
+      return { ...state, ...action.payload  };
+      break;
     default:
       return state;
   }
