@@ -40,28 +40,22 @@ public class UserControllerTest {
     @WithAnonymousUser
     public void shouldGetUnauthorizedWithoutRole() throws Exception {
 
-        this.mvc.perform(get("/user"))
+        this.mvc.perform(get("/api/user"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "USER")
-    public void getPersonsSuccessfullyWithUserRole() throws Exception {
-        this.mvc.perform(get("/api/whoami"))
-                .andExpect(status().is2xxSuccessful());
-    }
-
-    @Test
-    @WithAnonymousUser
-    public void getPersonsFailWithAnonymousUser() throws Exception {
-        this.mvc.perform(get("/api/whoami"))
+    public void getPersonsFailWithNormalUser() throws Exception {
+        this.mvc.perform(get("/api/user"))
                 .andExpect(status().is4xxClientError());
     }
+
 
     @Test
     @WithMockUser(roles = "ADMIN")
     public void getAllUserSuccessWithAdminRole() throws Exception {
-        this.mvc.perform(get("/api/user/all"))
+        this.mvc.perform(get("/api/user"))
                 .andExpect(status().is2xxSuccessful());
     }
 
