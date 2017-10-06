@@ -2,13 +2,16 @@ package com.loriepocket.rest;
 
 import com.loriepocket.converter.MealRequestToMealConverter;
 import com.loriepocket.dto.MealRequest;
+import com.loriepocket.dto.MealSummary;
 import com.loriepocket.model.Meal;
 import com.loriepocket.model.User;
 import com.loriepocket.rest.assembler.MealResourceAssembler;
+import com.loriepocket.rest.assembler.MealSummaryResourceAssambler;
 import com.loriepocket.service.MealService;
 import com.loriepocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -110,6 +114,34 @@ public class MealController {
             throw new IllegalArgumentException("Wrong route composition");
         // Meal exist and belongs to the user stated in path
         this.mealService.delete(mealId);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/summary")
+    public HttpEntity<PagedResources<MealSummary>> loadSummary(@PathVariable( name = "userId" ) Long userId,
+                                                        @RequestParam( name = "startDate", required = false )@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+                                                        @RequestParam( name = "endDate", required = false ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate,
+                                                        Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
+
+        Page<MealSummary> page;
+        if(startDate != null && endDate != null) {
+            page = this.mealService.findSummaryByUserIdAndConsumedDateBetween(userId, startDate, endDate, pageable);
+        } else {
+            page = this.mealService.findSummaryByUserId(userId, pageable);
+        }
+
+        Link link = linkTo(methodOn(MealController.class)
+                .loadAll(userId, startDate, endDate, pageable, assembler))
+                .withRel("meals");
+        return new ResponseEntity<>(assembler.toResource(page, new MealSummaryResourceAssambler(userId), link), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/day/{consumedDate}/summary")
+    public HttpEntity<PagedResources<Meal>> loadSummaryByConsumedDate(@PathVariable( name = "userId" ) Long id,
+                                                                      @PathVariable( name = "consumedDate" ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date consumedDate,
+                                                                      Pageable pageable, PagedResourcesAssembler assembler) {
+        Page<Meal> page = mealService.findByUserIdAndConsumedDate(id, consumedDate, pageable);
+
+        return new ResponseEntity<PagedResources<Meal>>(assembler.toResource(page, new MealResourceAssembler(id)), HttpStatus.OK);
     }
 
     private User findAndValidateUser(Long id) {
