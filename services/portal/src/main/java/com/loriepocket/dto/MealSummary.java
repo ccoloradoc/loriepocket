@@ -1,6 +1,5 @@
 package com.loriepocket.dto;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -8,23 +7,20 @@ import java.util.Date;
  * Created by cristian.colorado on 10/5/2017.
  */
 public class MealSummary {
-    private static SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
+    private static SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
 
     private String name;
-    private Date consumedDate;
     private long calories;
-
     private long elements;
 
     public MealSummary() {
 
     }
 
-    public MealSummary(String name, long calories, long elements) {
-        this.name = name;
+    public MealSummary(Date consumedDate, long calories, long elements) {
+        this.name = parser.format(consumedDate);
         this.calories = calories;
         this.elements = elements;
-        this.setConsumedDate(name);
     }
 
     public String getName() {
@@ -33,22 +29,6 @@ public class MealSummary {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Date getConsumedDate() {
-        return consumedDate;
-    }
-
-    public void setConsumedDate(Date consumedDate) {
-        this.consumedDate = consumedDate;
-    }
-
-    public void setConsumedDate(String consumedDate) {
-        try {
-            this.consumedDate = parser.parse(name);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     public long getCalories() {
