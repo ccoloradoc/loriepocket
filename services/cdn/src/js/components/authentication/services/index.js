@@ -12,7 +12,7 @@ export function configureSecuredAxios(store) {
   // Configuring interceptor to refresh token if posible
   axiosJwt.interceptors.response.use(undefined, (error) => {
     const originalRequest = error.config;
-    if ( error.response.status === 500 || error.response.status === 401 && !originalRequest._retry) {
+    if ( error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       const token = window.localStorage.getItem('token');
