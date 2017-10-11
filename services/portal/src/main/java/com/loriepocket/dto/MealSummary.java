@@ -23,6 +23,12 @@ public class MealSummary {
         this.elements = elements;
     }
 
+    public MealSummary(String consumedDate, long calories, long elements) {
+        this.name = consumedDate;
+        this.calories = calories;
+        this.elements = elements;
+    }
+
     public String getName() {
         return name;
     }

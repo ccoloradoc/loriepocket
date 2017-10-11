@@ -1,14 +1,10 @@
 package com.loriepocket.service;
 
-import com.loriepocket.dto.MealSummary;
 import com.loriepocket.model.Meal;
+import com.loriepocket.model.MealSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 /**

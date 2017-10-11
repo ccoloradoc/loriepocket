@@ -1,17 +1,15 @@
 package com.loriepocket.service.impl;
 
-import com.loriepocket.dto.MealSummary;
 import com.loriepocket.model.Meal;
+import com.loriepocket.model.MealSummary;
 import com.loriepocket.repository.MealRepository;
 import com.loriepocket.service.MealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 /**

@@ -2,8 +2,8 @@ package com.loriepocket.rest;
 
 import com.loriepocket.converter.MealRequestToMealConverter;
 import com.loriepocket.dto.MealRequest;
-import com.loriepocket.dto.MealSummary;
 import com.loriepocket.model.Meal;
+import com.loriepocket.model.MealSummary;
 import com.loriepocket.model.User;
 import com.loriepocket.rest.assembler.MealResourceAssembler;
 import com.loriepocket.rest.assembler.MealSummaryResourceAssambler;
@@ -11,7 +11,6 @@ import com.loriepocket.service.MealService;
 import com.loriepocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -118,9 +117,9 @@ public class MealController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/summary")
     public HttpEntity<PagedResources<MealSummary>> loadSummary(@PathVariable( name = "userId" ) Long userId,
-                                                        @RequestParam( name = "startDate", required = false )@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
-                                                        @RequestParam( name = "endDate", required = false ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate,
-                                                        Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
+                                                               @RequestParam( name = "startDate", required = false )@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+                                                               @RequestParam( name = "endDate", required = false ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate,
+                                                               Pageable pageable, PagedResourcesAssembler assembler) throws Exception {
 
         Page<MealSummary> page;
         if(startDate != null && endDate != null) {

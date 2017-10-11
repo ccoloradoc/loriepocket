@@ -1,7 +1,6 @@
 package com.loriepocket.rest.assembler;
 
-import com.loriepocket.dto.MealSummary;
-import com.loriepocket.model.Meal;
+import com.loriepocket.model.MealSummary;
 import com.loriepocket.rest.MealController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
@@ -30,7 +29,7 @@ public class MealSummaryResourceAssambler   extends ResourceAssemblerSupport<Mea
     public MealSummaryResource toResource(MealSummary meal) {
         Link link = null;
         try {
-            link = linkTo(methodOn(MealController.class).loadSummaryByConsumedDate(userId, parser.parse(meal.getName()), null, null)).withRel("summary");
+            link = linkTo(methodOn(MealController.class).loadSummaryByConsumedDate(userId, parser.parse(meal.getConsumedDate()), null, null)).withRel("summary");
         } catch (ParseException e) {
             e.printStackTrace();
         }
