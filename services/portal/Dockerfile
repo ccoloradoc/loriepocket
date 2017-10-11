@@ -1,4 +1,6 @@
 FROM openjdk:8-jdk-alpine
+RUN apk add --update tzdata
+ENV TZ=America/Mexico_City
 RUN mkdir /portal
 COPY ./target/**.jar ./portal
 WORKDIR /portal
