@@ -1,4 +1,4 @@
-import { FETCH_MEALS, UPDATE_MEAL, POST_MEAL, DELETE_MEAL, SELECT_MEAL,
+import { FETCH_MEALS, UPDATE_MEAL, POST_MEAL, DELETE_MEAL, SELECT_MEAL, FETCH_SUMMARY, FETCH_DAY_SUMMARY, CLEAN_DAY_SUMMARY,
   UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME, FILTER_DATE, ACTIVE_PROFILE, UPDATE_MEALS_FILTER } from '../actions';
 
 export function activeProfileReducer(state = {}, action) {
@@ -90,6 +90,31 @@ export function filterReducer(state = { size: 10 }, action) {
     case UPDATE_MEALS_FILTER:
       return { ...state, ...action.payload  };
       break;
+    default:
+      return state;
+  }
+}
+
+/* SUMMARY */
+
+export function summaryReducer(state = [], action) {
+  switch (action.type) {
+    case FETCH_SUMMARY:
+      return action.payload.content;
+    default:
+      return state;
+  }
+}
+
+export function summaryDetailReducer(state = {}, action) {
+  switch (action.type) {
+    case FETCH_DAY_SUMMARY:
+      return {...state, [action.payload.date] : action.payload.data.content};
+    case CLEAN_DAY_SUMMARY:
+      if(!action.payload)
+        return {};
+      delete state[action.payload];
+      return { ...state };
     default:
       return state;
   }

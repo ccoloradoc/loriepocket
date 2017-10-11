@@ -2,7 +2,7 @@ import {combineReducers} from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import { default as authenticationReducer, myselfReducer } from 'authentication/reducers';
 import { userListReducer, userReducer, userFormReducer, rolesReducer, inviteListReducer } from 'admin/reducers';
-import { mealListReducer, mealReducer, mealFormReducer, filterFormReducer, activeProfileReducer, filterReducer } from 'user/reducers';
+import { mealListReducer, mealReducer, mealFormReducer, filterFormReducer, activeProfileReducer, filterReducer, summaryReducer, summaryDetailReducer } from 'user/reducers';
 import { pageReducer } from 'commons/reducers';
 
 const rootReducer = combineReducers({
@@ -20,7 +20,9 @@ const rootReducer = combineReducers({
     meal: mealReducer,
     profile: activeProfileReducer,
     filter: filterReducer,
-    page: pageReducer
+    page: pageReducer,
+    summary: summaryReducer,
+    summaryDetail: summaryDetailReducer
 });
 
 export default rootReducer;

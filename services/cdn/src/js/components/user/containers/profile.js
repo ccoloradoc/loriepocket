@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { MealList } from 'user';
-import { setActiveProfile, deleteMeal, selectMeal, fetchMeals } from '../actions';
+import { MealList, SearchBar, MealForm, MealSummary } from 'user';
+import { setActiveProfile, deleteMeal, selectMeal, fetchMeals, fetchSummary, fetchDayDetails, cleanDayDetails } from '../actions';
 import { Pagination, Modal, Card, CardHeader } from 'commons';
-import { SearchBar, MealForm } from 'user';
 
 class Profile extends Component {
   componentWillMount() {
@@ -24,7 +23,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { meals, page } = this.props;
+    const { summary, summaryDetail, page } = this.props;
     return (
       <div className="flex-container">
         <div className="row">
@@ -35,15 +34,17 @@ class Profile extends Component {
         <div className="row">
           <div className="col s12">
             <Card>
-              <CardHeader title="MealList">
+              <CardHeader title="Summary">
                 <a className="btn-floating btn right red" onClick={ () => { this.props.selectMeal({}) } }>
                   <i className="material-icons">add</i>
                 </a>
               </CardHeader>
               <SearchBar onSearch={this.search.bind(this)}/>
-              <MealList meals={meals} onUpdate={this.props.selectMeal} onDelete={this.props.deleteMeal} >
-                <Pagination page={page} onPaginate={ this.search.bind(this) }/>
-              </MealList>
+              <MealSummary summary={summary}
+                summaryDetail={summaryDetail}
+                onExpand={this.toggleDayDetails.bind(this)}
+                onUpdate={this.props.selectMeal} />
+              <Pagination page={page} onPaginate={ this.search.bind(this) }/>
             </Card>
             { this.renderForm() }
           </div>
@@ -63,14 +64,45 @@ class Profile extends Component {
   }
 
   search(filter) {
-    this.props.fetchMeals(this.props.profile, { ...this.props.filter, ...filter});
+    this.props.fetchSummary(this.props.profile.id, { ...this.props.filter, ...filter});
+  }
+
+  toggleDayDetails(day) {
+    if(this.props.summaryDetail.hasOwnProperty(day.consumedDate)) {
+      this.props.cleanDayDetails(day.consumedDate);
+    } else {
+      this.props.fetchDayDetails(this.props.profile.id, day.consumedDate);
+    }
+
   }
 
   closeModal() {
     this.props.selectMeal(null);
+    this.props.fetchSummary(this.props.profile.id, this.props.filter);
   }
 }
 
 export default connect(
-  (state) => { return { profile: state.profile, meals: state.meals, meal: state.meal, page: state.page, filter: state.filter }  },
-  { setActiveProfile, deleteMeal, selectMeal, fetchMeals } )(Profile);
+  (state) => { return {
+    profile: state.profile, meal: state.meal, page: state.page, filter: state.filter,
+    summary: state.summary, summaryDetail: state.summaryDetail }  },
+  { setActiveProfile, deleteMeal, selectMeal, fetchMeals, fetchSummary, fetchDayDetails, cleanDayDetails } )(Profile);
+
+
+
+  // <div className="row">
+  //   <div className="col s12">
+  //     <Card>
+  //       <CardHeader title="Meal List">
+  //         <a className="btn-floating btn right red" onClick={ () => { this.props.selectMeal({}) } }>
+  //           <i className="material-icons">add</i>
+  //         </a>
+  //       </CardHeader>
+  //       <SearchBar onSearch={this.search.bind(this)}/>
+  //       <MealList meals={meals} onUpdate={this.props.selectMeal} onDelete={this.props.deleteMeal} >
+  //         <Pagination page={page} onPaginate={ this.search.bind(this) }/>
+  //       </MealList>
+  //     </Card>
+  //     { this.renderForm() }
+  //   </div>
+  // </div>

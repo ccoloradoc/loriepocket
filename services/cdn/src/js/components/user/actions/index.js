@@ -1,5 +1,6 @@
 import axios from 'authentication/services';
 import React, { Component } from 'react';
+import moment from 'moment';
 import qs from 'qs';
 
 export const FETCH_MEALS = 'fetch_meals';
@@ -11,6 +12,9 @@ export const UPDATE_CONSUMED_DATE = 'update_consumed_date';
 export const UPDATE_CONSUMED_DATE_TIME = 'update_consumed_date_time';
 export const FILTER_DATE = 'filter_date';
 export const ACTIVE_PROFILE = 'active_profile';
+export const FETCH_SUMMARY = 'fetch_summary';
+export const FETCH_DAY_SUMMARY = 'fetch_day_summary';
+export const CLEAN_DAY_SUMMARY = 'clean_day_summary';
 export const UPDATE_MEALS_FILTER = 'update_meals_filter';
 
 export function setActiveProfile(userId, filter) {
@@ -18,13 +22,17 @@ export function setActiveProfile(userId, filter) {
     const request = [];
     dispatch({ type: ACTIVE_PROFILE, payload: {} });
     dispatch({ type: FETCH_MEALS, payload: [] });
+    dispatch({ type: FETCH_SUMMARY, payload: { content: [] } });
+    dispatch({ type: CLEAN_DAY_SUMMARY});
     if(userId) {
       request.push(axios.get(`/api/user/${userId}`));
       request.push(axios.get(`/api/user/${userId}/meal` + '?' + qs.stringify(filter)));
+      request.push(axios.get(`/api/user/${userId}/summary` + '?' + qs.stringify(filter)));
     } else {
       let id = localStorage.getItem('userId');
       request.push(axios.get('/auth/me'));
       request.push(axios.get(`/api/user/${id}/meal` + '?' + qs.stringify(filter)));
+      request.push(axios.get(`/api/user/${id}/summary` + '?' + qs.stringify(filter)));
     }
 
     Promise.all(request).then(response => {
@@ -36,6 +44,11 @@ export function setActiveProfile(userId, filter) {
       dispatch({
         type: FETCH_MEALS,
         payload: response[1].data
+      });
+
+      dispatch({
+        type: FETCH_SUMMARY,
+        payload: response[2].data
       });
     });
   }
@@ -137,5 +150,42 @@ export function updateDate(date) {
       type: FILTER_DATE,
       payload: date
     });
+  }
+}
+
+export function fetchSummary(id, filter) {
+  return function(dispatch) {
+    axios.get(`/api/user/${id}/summary` + '?' + qs.stringify(filter))
+    .then((response) => {
+      dispatch({
+        type: FETCH_SUMMARY,
+        payload: response.data
+      })
+    });
+  }
+}
+
+export function fetchDayDetails(userId, consumedDate) {
+    const date = moment(consumedDate).format("YYYY-MM-DD");
+    return function(dispatch) {
+      axios.get(`/api/user/${userId}/day/${date}/summary`)
+      .then((response) => {
+        dispatch({
+          type: FETCH_DAY_SUMMARY,
+          payload: {
+            date: date,
+            data: response.data
+          }
+        })
+      });
+    }
+}
+
+export function cleanDayDetails(consumedDate) {
+  return function(dispatch) {
+    dispatch({
+      type: CLEAN_DAY_SUMMARY,
+      payload: consumedDate
+    })
   }
 }
