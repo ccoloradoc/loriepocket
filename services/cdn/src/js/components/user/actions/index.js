@@ -115,11 +115,13 @@ export function updateMeal(meal, user, callback) {
   }
 }
 
-export function deleteMeal(meal, user) {
+export function deleteMeal(meal, user, callback) {
   const url = user.links.find((link) => link.rel === 'meal').href;
   return function(dispatch) {
     axios.delete(`${url}/${meal.id}`)
       .then((response) => {
+        const date = moment(meal.consumedDate).format("YYYY-MM-DD");
+        callback(date);
         dispatch({
           type: DELETE_MEAL,
           payload: meal

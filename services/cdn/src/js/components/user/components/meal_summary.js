@@ -4,7 +4,7 @@ import MealSummaryItem from './meal_summary_item';
 import MealSummaryItemDetails from './meal_summary_item_details';
 
 export default function(props) {
-  const { summary, summaryDetail, onExpand } = props;
+  const { summary, summaryDetail, onExpand, onUpdate, onDelete } = props;
 
   const items = summary.map(item => {
     const date = item.consumedDate;
@@ -17,7 +17,7 @@ export default function(props) {
             <i className="material-icons">{collapseIcon}</i>
           </a>
         </MealSummaryItem>
-        <MealSummaryItemDetails details={details}/>
+        <MealSummaryItemDetails details={details} onUpdate={onUpdate} onDelete={onDelete}/>
       </li>
     );
   });

@@ -43,7 +43,8 @@ class Profile extends Component {
               <MealSummary summary={summary}
                 summaryDetail={summaryDetail}
                 onExpand={this.toggleDayDetails.bind(this)}
-                onUpdate={this.props.selectMeal} />
+                onUpdate={this.props.selectMeal}
+                onDelete={this.deleteMeal.bind(this)}/>
               <Pagination page={page} onPaginate={ this.search.bind(this) }/>
             </Card>
             { this.renderForm() }
@@ -80,6 +81,14 @@ class Profile extends Component {
     this.props.selectMeal(null);
     this.props.fetchSummary(this.props.profile.id, this.props.filter);
     this.props.fetchDayDetails(this.props.profile.id, date);
+  }
+
+  deleteMeal(meal) {
+    this.props.deleteMeal(meal, this.props.profile, (date) => {
+      this.props.fetchSummary(this.props.profile.id, this.props.filter);
+      this.props.fetchDayDetails(this.props.profile.id, date);
+    }) ;
+
   }
 }
 
