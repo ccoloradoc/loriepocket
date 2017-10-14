@@ -76,9 +76,10 @@ class Profile extends Component {
 
   }
 
-  closeModal() {
+  closeModal(date) {
     this.props.selectMeal(null);
     this.props.fetchSummary(this.props.profile.id, this.props.filter);
+    this.props.fetchDayDetails(this.props.profile.id, date);
   }
 }
 
@@ -87,22 +88,3 @@ export default connect(
     profile: state.profile, meal: state.meal, page: state.page, filter: state.filter,
     summary: state.summary, summaryDetail: state.summaryDetail }  },
   { setActiveProfile, deleteMeal, selectMeal, fetchMeals, fetchSummary, fetchDayDetails, cleanDayDetails } )(Profile);
-
-
-
-  // <div className="row">
-  //   <div className="col s12">
-  //     <Card>
-  //       <CardHeader title="Meal List">
-  //         <a className="btn-floating btn right red" onClick={ () => { this.props.selectMeal({}) } }>
-  //           <i className="material-icons">add</i>
-  //         </a>
-  //       </CardHeader>
-  //       <SearchBar onSearch={this.search.bind(this)}/>
-  //       <MealList meals={meals} onUpdate={this.props.selectMeal} onDelete={this.props.deleteMeal} >
-  //         <Pagination page={page} onPaginate={ this.search.bind(this) }/>
-  //       </MealList>
-  //     </Card>
-  //     { this.renderForm() }
-  //   </div>
-  // </div>

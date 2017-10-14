@@ -88,7 +88,8 @@ export function saveMeal(meal, user, callback) {
   return function(dispatch) {
     axios.post(url, meal)
       .then((response) => {
-        callback();
+        const date = moment(response.data.consumedDate).format("YYYY-MM-DD");
+        callback(date);
         dispatch({
           type: POST_MEAL,
           payload: response.data
@@ -104,7 +105,8 @@ export function updateMeal(meal, user, callback) {
   return function(dispatch) {
     axios.put(`${url}/${meal.id}`, meal)
       .then((response) => {
-        callback();
+        const date = moment(response.data.consumedDate).format("YYYY-MM-DD");
+        callback(date);
         dispatch({
           type: UPDATE_MEAL,
           payload: response.data
