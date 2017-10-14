@@ -60,7 +60,7 @@ class Header extends Component {
             <ul className="side-nav" id="mobile-demo">
               <li className="logo">
                   <a id="logo-container" href="#!/" className="brand-logo">
-                      <img className="responsive-img" src="/images/logo.png" alt=""/>
+                      <img className="responsive-img" src="/img/logo.png" alt=""/>
                   </a>
               </li>
               { this.renderMenuMobile() }

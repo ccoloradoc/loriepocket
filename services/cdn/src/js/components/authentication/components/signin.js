@@ -37,7 +37,7 @@ class Signin extends Component {
           { this.displayErrorMessage() }
           <div className="card">
             <div className="card-image">
-              <img src="https://lorempixel.com/600/300/nature/3"/>
+              <img src="img/canva.jpg"/>
               <span className="card-title">Sign In</span>
             </div>
             <div className="card-stacked">
