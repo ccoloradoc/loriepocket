@@ -116,6 +116,7 @@ public class MealController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/summary")
+    @PreAuthorize("#userId == principal.id or hasAnyRole('MANAGER','ADMIN')")
     public HttpEntity<PagedResources<MealSummary>> loadSummary(@PathVariable( name = "userId" ) Long userId,
                                                                @RequestParam( name = "startDate", required = false )@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
                                                                @RequestParam( name = "endDate", required = false ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate,
@@ -135,6 +136,7 @@ public class MealController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/day/{consumedDate}/summary")
+    @PreAuthorize("#userId == principal.id or hasAnyRole('MANAGER','ADMIN')")
     public HttpEntity<PagedResources<Meal>> loadSummaryByConsumedDate(@PathVariable( name = "userId" ) Long id,
                                                                       @PathVariable( name = "consumedDate" ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date consumedDate,
                                                                       Pageable pageable, PagedResourcesAssembler assembler) {
