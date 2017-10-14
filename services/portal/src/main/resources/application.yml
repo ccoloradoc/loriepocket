@@ -2,8 +2,37 @@ app:
   name: springboot-jwt-demo
 jwt:
   header: Authorization
-  expires_in: 10 # 10 minutes
+  expires_in: 40 # 10 minutes
   secret: queenvictoria
   cookie: AUTH-TOKEN
 server:
   port: 90 #local environment IntelliJ
+
+
+# H2
+spring:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+# Datasource
+  datasource:
+    url: jdbc:h2:file:~/AZ
+  username: sa
+  password:
+  driver-class-name: org.h2.Driver
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+      logging:
+        level:
+          org:
+            hibernatetype:
+              descriptor:
+                sql:
+                  BasicBinder: TRACE
