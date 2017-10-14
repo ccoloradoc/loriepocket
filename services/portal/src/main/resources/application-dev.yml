@@ -7,3 +7,31 @@ jwt:
   cookie: AUTH-TOKEN
 server:
   port: 80
+
+# H2
+spring:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+# Datasource
+  datasource:
+    url: jdbc:h2:file:~/AZ
+  username: sa
+  password:
+  driver-class-name: org.h2.Driver
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+      logging:
+        level:
+          org:
+            hibernatetype:
+              descriptor:
+                sql:
+                  BasicBinder: TRACE
