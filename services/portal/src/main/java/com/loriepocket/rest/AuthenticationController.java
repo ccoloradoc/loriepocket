@@ -99,7 +99,7 @@ public class AuthenticationController {
             // Add cookie to response
             response.addCookie( authCookie );
 
-            UserTokenState userTokenState = new UserTokenState(refreshedToken, EXPIRES_IN, ((User)((TokenBasedAuthentication)principal).getPrincipal()));
+            UserTokenState userTokenState = new UserTokenState(refreshedToken, EXPIRES_IN);
             return ResponseEntity.ok(userTokenState);
         } else {
             UserTokenState userTokenState = new UserTokenState();

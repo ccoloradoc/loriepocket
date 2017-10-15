@@ -60,6 +60,14 @@ export function SimpleInputField(field) {
   );
 };
 
+export function PlainInputField(field) {
+  const { meta: { active, touched, error, valid } } = field;
+
+  return (
+    <input {...field.input} type={ field.type || 'text' } className="validate"/>
+  );
+}
+
 
 export function HiddenField(field) {
   return (

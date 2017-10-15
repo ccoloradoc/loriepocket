@@ -26,6 +26,7 @@ public class UserRequestToUserConverter implements Converter<UserRequest, User> 
         user.setFirstname(userRequest.getFirstname());
         user.setLastname(userRequest.getLastname());
         user.setPassword(userRequest.getPassword());
+        user.setCalories(userRequest.getCalories());
         List<AuthorityRequest> authorityRequestList = userRequest.getAuthorities();
         for(AuthorityRequest authorityRequest : authorityRequestList) {
             Authority authority = authorityRequestToAuthority.convert(authorityRequest);

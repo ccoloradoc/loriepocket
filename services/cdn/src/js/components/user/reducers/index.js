@@ -1,9 +1,11 @@
 import { FETCH_MEALS, UPDATE_MEAL, POST_MEAL, DELETE_MEAL, SELECT_MEAL, FETCH_SUMMARY, FETCH_DAY_SUMMARY, CLEAN_DAY_SUMMARY,
-  UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME, FILTER_DATE, ACTIVE_PROFILE, UPDATE_MEALS_FILTER } from '../actions';
+  UPDATE_CONSUMED_DATE, UPDATE_CONSUMED_DATE_TIME, FILTER_DATE, ACTIVE_PROFILE, UPDATE_PROFILE, UPDATE_MEALS_FILTER } from '../actions';
 
 export function activeProfileReducer(state = {}, action) {
   switch (action.type) {
     case ACTIVE_PROFILE:
+      return action.payload;
+    case UPDATE_PROFILE:
       return action.payload;
     default:
       return state;

@@ -6,3 +6,28 @@
     position: relative;
     height: 100px;
 }
+
+.profile-header {
+  .inline-form {
+      display: inline;
+      input {
+        max-width: 5rem;
+        font-size: 1.64rem;
+        line-height: 110%;
+        margin: 0;
+      }
+      h5 {
+        display: inline;
+        padding-right: 1rem;
+      }
+      button {
+        background: #fff;
+        border: none;
+      }
+  }
+
+  h4 {
+    display: inline;
+    padding-right: 1rem;
+  }
+}

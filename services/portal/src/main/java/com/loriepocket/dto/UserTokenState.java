@@ -8,17 +8,15 @@ import com.loriepocket.model.User;
 public class UserTokenState {
     private String accessToken;
     private Long expiresIn;
-    private User authUser;
 
     public UserTokenState() {
         this.accessToken = null;
         this.expiresIn = null;
     }
 
-    public UserTokenState(String accessToken, long expiresIn, User user) {
+    public UserTokenState(String accessToken, long expiresIn) {
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
-        this.authUser = user;
     }
 
     public String getAccessToken() {
@@ -35,13 +33,5 @@ public class UserTokenState {
 
     public void setExpiresIn(Long expiresIn) {
         this.expiresIn = expiresIn;
-    }
-
-    public User getAuthUser() {
-        return authUser;
-    }
-
-    public void setAuthUser(User authUser) {
-        this.authUser = authUser;
     }
 }

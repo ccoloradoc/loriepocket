@@ -12,6 +12,7 @@ export const UPDATE_CONSUMED_DATE = 'update_consumed_date';
 export const UPDATE_CONSUMED_DATE_TIME = 'update_consumed_date_time';
 export const FILTER_DATE = 'filter_date';
 export const ACTIVE_PROFILE = 'active_profile';
+export const UPDATE_PROFILE = 'update_profile';
 export const FETCH_SUMMARY = 'fetch_summary';
 export const FETCH_DAY_SUMMARY = 'fetch_day_summary';
 export const CLEAN_DAY_SUMMARY = 'clean_day_summary';
@@ -53,6 +54,20 @@ export function setActiveProfile(userId, filter) {
     });
   }
 }
+
+export function updateUser(user, callback) {
+  return function(dispatch) {
+    axios.put(`/api/user/${user.id}`, user)
+      .then((response) => {
+        if(callback) callback();
+        dispatch({
+          type: UPDATE_PROFILE,
+          payload: response.data
+        });
+      });
+  }
+}
+
 
 export function fetchMeals(user, filter) {
   const url = user.links.find((link) => link.rel === 'meal').href;

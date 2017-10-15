@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { MealList, SearchBar, MealForm, MealSummary } from 'user';
+import { MealList, SearchBar, MealForm, MealSummary, ProfileDetails, ProfileCaloriesForm } from 'user';
 import { setActiveProfile, deleteMeal, selectMeal, fetchMeals, fetchSummary, fetchDayDetails, cleanDayDetails } from '../actions';
 import { Pagination, Modal, Card, CardHeader } from 'commons';
 
@@ -16,19 +16,15 @@ class Profile extends Component {
     }
   }
 
-  renderHeader() {
-    const profile  = this.props.profile;
-    if(profile.username)
-      return (<h4>{ `${profile.firstname} ${profile.lastname} (@${profile.username}) `}</h4>);
-  }
-
   render() {
-    const { summary, summaryDetail, page } = this.props;
+    const { profile, summary, summaryDetail, page } = this.props;
     return (
       <div className="flex-container">
         <div className="row">
           <div className="col s12">
-            { this.renderHeader() }
+            <ProfileDetails profile={profile}>
+              <ProfileCaloriesForm initialValues={profile}/>
+            </ProfileDetails>
           </div>
         </div>
         <div className="row">
@@ -41,6 +37,7 @@ class Profile extends Component {
               </CardHeader>
               <SearchBar onSearch={this.search.bind(this)}/>
               <MealSummary summary={summary}
+                limit={profile.calories}
                 summaryDetail={summaryDetail}
                 onExpand={this.toggleDayDetails.bind(this)}
                 onUpdate={this.props.selectMeal}

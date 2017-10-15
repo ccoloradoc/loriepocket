@@ -4,7 +4,7 @@ import MealSummaryItem from './meal_summary_item';
 import MealSummaryItemDetails from './meal_summary_item_details';
 
 export default function(props) {
-  const { summary, summaryDetail, onExpand, onUpdate, onDelete } = props;
+  const { limit, summary, summaryDetail, onExpand, onUpdate, onDelete } = props;
 
   const items = summary.map(item => {
     const date = item.consumedDate;
@@ -12,7 +12,7 @@ export default function(props) {
     const collapseIcon = summaryDetail.hasOwnProperty(date) ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
     return (
       <li key={item.consumedDate}>
-        <MealSummaryItem item={item} onExpand={onExpand}>
+        <MealSummaryItem item={item} limit={limit} onExpand={onExpand}>
           <a className="action" onClick={ () => onExpand(item) }>
             <i className="material-icons">{collapseIcon}</i>
           </a>

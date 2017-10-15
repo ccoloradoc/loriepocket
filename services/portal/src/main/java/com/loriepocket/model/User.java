@@ -38,6 +38,8 @@ public class User extends Auditable<String> implements UserDetails {
     @Column(name = "lastname")
     private String lastname;
 
+    @Column(name = "calories")
+    private int calories;
 
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority",
@@ -118,5 +120,13 @@ public class User extends Auditable<String> implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
     }
 }

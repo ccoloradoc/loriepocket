@@ -21,6 +21,8 @@ public class UserRequest {
     @NotNull
     private String lastname;
     @NotNull
+    private int calories;
+    @NotNull
     private List<AuthorityRequest> authorities = new ArrayList<>();
 
     public Long getId() {
@@ -71,4 +73,11 @@ public class UserRequest {
         this.authorities = authorities;
     }
 
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
 }
